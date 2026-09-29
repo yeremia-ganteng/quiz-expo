@@ -2,25 +2,37 @@
   "name": "quiz-expo",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
+"scripts": {
+  "dev": "tsx watch server.ts",
+  "build": "next build",
+  "start": "cross-env NODE_ENV=production tsx server.ts",
+  "reset-data": "tsx prisma/clear-data.ts"
+},
   "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "@xstate/react": "^6.1.0",
+    "canvas-confetti": "^1.9.4",
+    "framer-motion": "^13.4.1",
     "next": "16.3.6",
+    "prisma": "^6.19.3",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "recharts": "^3.10.1",
+    "socket.io": "^4.8.3",
+    "socket.io-client": "^4.8.3",
+    "xstate": "^5.33.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "cross-env": "^10.1.0",
     "eslint": "^9",
     "eslint-config-next": "16.3.6",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   }
 }
