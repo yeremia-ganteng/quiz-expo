@@ -19,7 +19,7 @@ async function loadQuestionsToCache() {
 
 async function enableWALMode() {
   try {
-    await prisma.$executeRawUnsafe(`PRAGMA journal_mode = WAL;`);
+    await prisma.$queryRawUnsafe('PRAGMA journal_mode=WAL;');
     await prisma.$executeRawUnsafe(`PRAGMA synchronous = NORMAL;`);
     console.log('⚡ SQLite WAL mode & Synchronous NORMAL berhasil diaktifkan.');
   } catch (error) {

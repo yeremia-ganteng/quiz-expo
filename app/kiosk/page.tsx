@@ -717,12 +717,12 @@ function QuizPanel({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className={isFull ? 'w-full max-w-3xl text-center' : 'w-full max-w-sm'}
+          className={isFull ? 'w-full max-w-5xl text-center mx-auto' : 'w-full max-w-sm'}
         >
-          <p className={`font-bold tracking-widest text-gray-400 uppercase text-center ${isFull ? 'text-sm mb-8' : 'text-xs mb-4'}`}>
-            Pilih Tema
+          <p className={`font-extrabold tracking-widest text-slate-400 uppercase text-center ${isFull ? 'text-2xl md:text-3xl mb-8' : 'text-xs mb-4'}`}>
+            PILIH TEMA
           </p>
-          <div className={isFull ? 'flex flex-col gap-5 text-left' : 'flex flex-col gap-3'}>
+          <div className={isFull ? 'flex flex-col gap-6 text-left' : 'flex flex-col gap-3'}>
             {categories.map((cat, i) => {
               const m = CATEGORY_META[cat];
               const count = allQuestions.filter((q) => q.category === cat).length;
@@ -734,23 +734,23 @@ function QuizPanel({
                   transition={{ delay: i * 0.06 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => onChooseCategory(cat)}
-                  className={`bg-white border-2 border-gray-200 hover:border-gray-300 rounded-2xl transition-all text-left flex items-center ${
-                    isFull ? 'p-7 gap-6' : 'p-4 gap-3'
+                  className={`bg-white border border-slate-200 hover:border-slate-300 rounded-3xl shadow-sm hover:shadow-md transition-all text-left flex items-center ${
+                    isFull ? 'p-6 md:p-8 gap-6' : 'p-4 gap-3'
                   }`}
                 >
-                  <div className={`rounded-xl ${m?.iconBg} ${m?.color} flex items-center justify-center shrink-0 ${isFull ? 'w-16 h-16' : 'w-10 h-10'}`}>
+                  <div className={`rounded-2xl ${m?.iconBg} ${m?.color} flex items-center justify-center shrink-0 ${isFull ? 'w-20 h-20 md:w-24 md:h-24' : 'w-10 h-10'}`}>
                     {m?.icon}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className={`flex items-center gap-3 ${isFull ? 'mb-1.5' : ''}`}>
-                      <p className={`font-bold text-slate-900 ${isFull ? 'text-xl' : 'text-sm'}`}>{cat}</p>
+                    <div className={`flex items-center gap-3 ${isFull ? 'mb-2' : ''}`}>
+                      <p className={`font-extrabold text-slate-900 ${isFull ? 'text-2xl md:text-3xl' : 'text-sm'}`}>{cat}</p>
                       {isFull && (
-                        <span className="text-xs font-semibold text-gray-400 bg-gray-50 border border-gray-200 px-2 py-0.5 rounded">
+                        <span className="px-3 py-1 bg-slate-100 text-slate-600 text-sm md:text-base font-semibold rounded-lg">
                           {count} Soal
                         </span>
                       )}
                     </div>
-                    <p className={`text-gray-400 ${isFull ? 'text-sm' : 'text-xs truncate'}`}>{m?.description}</p>
+                    <p className={`text-slate-500 ${isFull ? 'text-base md:text-lg leading-relaxed' : 'text-xs truncate'}`}>{m?.description}</p>
                   </div>
                 </motion.button>
               );

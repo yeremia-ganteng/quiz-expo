@@ -13,6 +13,159 @@ export type ScoreData = {
 
 export type DuelData = { a: ScoreData; b: ScoreData };
 
+/* ==========================================================================
+   SVG ICONS & EMBLEMS
+   ========================================================================== */
+
+function KetepatanEmblem() {
+  return (
+    <div className="relative w-14 h-14 md:w-16 md:h-16 flex items-center justify-center shrink-0">
+      <div className="absolute inset-0 bg-emerald-100/80 rounded-2xl scale-100" />
+      <div className="relative w-11 h-11 md:w-13 md:h-13 bg-emerald-500 rounded-xl flex items-center justify-center text-white shadow-sm">
+        <svg className="w-7 h-7 md:w-8 md:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="9" className="stroke-white/40" />
+          <circle cx="12" cy="12" r="5" className="stroke-white" />
+          <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+          <path d="M19 5L13.5 10.5" strokeWidth="2.5" />
+          <path d="M21 3L18 3L19 5L21 6L21 3Z" fill="currentColor" />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+function RataRataEmblem() {
+  return (
+    <div className="relative w-14 h-14 md:w-16 md:h-16 flex items-center justify-center shrink-0">
+      <div className="absolute inset-0 bg-blue-100/80 rounded-2xl scale-100" />
+      <div className="relative w-11 h-11 md:w-13 md:h-13 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-sm">
+        <svg className="w-7 h-7 md:w-8 md:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="9" className="stroke-white" />
+          <path d="M12 7V12L15.5 14.5" strokeWidth="2.5" />
+          <line x1="12" y1="4" x2="12" y2="5" strokeWidth="2" />
+          <line x1="12" y1="19" x2="12" y2="20" strokeWidth="2" />
+          <line x1="4" y1="12" x2="5" y2="12" strokeWidth="2" />
+          <line x1="19" y1="12" x2="20" y2="12" strokeWidth="2" />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+function TercepatEmblem() {
+  return (
+    <div className="relative w-14 h-14 md:w-16 md:h-16 flex items-center justify-center shrink-0">
+      <div className="absolute inset-0 bg-amber-100/80 rounded-2xl scale-100" />
+      <div className="relative w-11 h-11 md:w-13 md:h-13 bg-amber-500 rounded-xl flex items-center justify-center text-white shadow-sm">
+        <svg className="w-7 h-7 md:w-8 md:h-8 fill-white" viewBox="0 0 24 24">
+          <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+function TotalWaktuEmblem() {
+  return (
+    <div className="relative w-14 h-14 md:w-16 md:h-16 flex items-center justify-center shrink-0">
+      <div className="absolute inset-0 bg-indigo-100/80 rounded-2xl scale-100" />
+      <div className="relative w-11 h-11 md:w-13 md:h-13 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-sm">
+        <svg className="w-7 h-7 md:w-8 md:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M10 2H14" strokeWidth="2.5" />
+          <circle cx="12" cy="14" r="8" strokeWidth="2" />
+          <path d="M12 10V14L14.5 15.5" strokeWidth="2.2" />
+          <path d="M5 6L3 8" strokeWidth="2" />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+/* ==========================================================================
+   MINI BADGES & HELPER ICONS
+   ========================================================================== */
+
+function TargetBadge() {
+  return (
+    <div className="w-7 h-7 rounded-full bg-emerald-50 border border-emerald-200/60 flex items-center justify-center text-emerald-600">
+      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+        <circle cx="12" cy="12" r="8" />
+        <circle cx="12" cy="12" r="3" fill="currentColor" />
+      </svg>
+    </div>
+  );
+}
+
+function ClockBadge() {
+  return (
+    <div className="w-7 h-7 rounded-full bg-blue-50 border border-blue-200/60 flex items-center justify-center text-blue-600">
+      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 8V12L14.5 14" />
+      </svg>
+    </div>
+  );
+}
+
+function LightningBadge() {
+  return (
+    <div className="w-7 h-7 flex items-center justify-center text-amber-500">
+      <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+        <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" />
+      </svg>
+    </div>
+  );
+}
+
+function PurpleClockBadge() {
+  return (
+    <div className="w-7 h-7 rounded-full bg-indigo-50 border border-indigo-200/60 flex items-center justify-center text-indigo-600">
+      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 8V12L14.5 14" />
+      </svg>
+    </div>
+  );
+}
+
+function CheckIcon({ className = "w-3.5 h-3.5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function CrossIcon({ className = "w-3.5 h-3.5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function AwardBadgeIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 15C15.866 15 19 11.866 19 8C19 4.13401 15.866 1 12 1C8.13401 1 5 4.13401 5 8C5 11.866 8.13401 15 12 15Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M8.21 13.89L7 23L12 20L17 23L15.79 13.88" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function BackHomeIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M9 22V12H15V22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+/* ==========================================================================
+   HELPER FUNCTIONS & COMPUTATION
+   ========================================================================== */
+
 function formatSeconds(ms: number) {
   return (ms / 1000).toFixed(1);
 }
@@ -48,7 +201,7 @@ function CountUp({ value, duration = 1.2 }: { value: number; duration?: number }
   return <>{display}</>;
 }
 
-function ScoreRing({ score, total, size = 200 }: { score: number; total: number; size?: number }) {
+function ScoreRing({ score, total, size = 210 }: { score: number; total: number; size?: number }) {
   const stroke = 14;
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
@@ -57,12 +210,12 @@ function ScoreRing({ score, total, size = 200 }: { score: number; total: number;
   return (
     <div className="relative inline-flex items-center justify-center shrink-0" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={radius} stroke="#e5e7eb" strokeWidth={stroke} fill="none" />
+        <circle cx={size / 2} cy={size / 2} r={radius} className="stroke-slate-100" strokeWidth={stroke} fill="none" />
         <motion.circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke="#0f172a"
+          className="stroke-indigo-600"
           strokeWidth={stroke}
           fill="none"
           strokeLinecap="round"
@@ -72,39 +225,86 @@ function ScoreRing({ score, total, size = 200 }: { score: number; total: number;
           transition={{ duration: 1.4, ease: 'easeOut', delay: 0.2 }}
         />
       </svg>
-      <div className="absolute flex flex-col items-center">
-        <span className="text-6xl font-extrabold text-slate-900 leading-none">
+      <div className="absolute flex flex-col items-center justify-center">
+        <span className="text-6xl font-black text-slate-900 leading-none tracking-tight">
           <CountUp value={score} />
         </span>
-        <span className="text-sm text-gray-400 mt-2">dari {total} soal</span>
+        <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-2.5">dari {total} soal</span>
       </div>
     </div>
   );
 }
 
-function StatTile({
-  label,
-  value,
-  unit,
-  delay = 0,
-}: {
+/* ==========================================================================
+   STAT TILE COMPONENT
+   ========================================================================== */
+
+export interface StatTileProps {
   label: string;
   value: string | number;
   unit: string;
+  type: 'accuracy' | 'average' | 'fastest' | 'totalTime';
   delay?: number;
-}) {
+}
+
+export function StatTile({ label, value, unit, type, delay = 0 }: StatTileProps) {
+  const config = {
+    accuracy: {
+      emblem: <KetepatanEmblem />,
+      badge: <TargetBadge />,
+      unitColor: 'text-emerald-600',
+      glowColor: 'bg-emerald-500/10',
+      borderColor: 'border-slate-200/90 hover:border-emerald-300',
+    },
+    average: {
+      emblem: <RataRataEmblem />,
+      badge: <ClockBadge />,
+      unitColor: 'text-blue-600',
+      glowColor: 'bg-blue-500/10',
+      borderColor: 'border-slate-200/90 hover:border-blue-300',
+    },
+    fastest: {
+      emblem: <TercepatEmblem />,
+      badge: <LightningBadge />,
+      unitColor: 'text-amber-500',
+      glowColor: 'bg-amber-500/10',
+      borderColor: 'border-slate-200/90 hover:border-amber-300',
+    },
+    totalTime: {
+      emblem: <TotalWaktuEmblem />,
+      badge: <PurpleClockBadge />,
+      unitColor: 'text-indigo-600',
+      glowColor: 'bg-indigo-500/10',
+      borderColor: 'border-slate-200/90 hover:border-indigo-300',
+    },
+  }[type];
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.5 }}
-      className="bg-white border border-gray-200 rounded-2xl p-4.5 flex flex-col justify-center shadow-xs"
+      transition={{ delay, duration: 0.4, ease: 'easeOut' }}
+      className={`relative overflow-hidden bg-white/90 backdrop-blur-md border ${config.borderColor} rounded-2xl p-5 md:p-6 shadow-xs hover:shadow-md transition-all duration-300 flex items-center justify-between gap-4`}
     >
-      <p className="text-[10px] font-bold tracking-widest text-gray-400 uppercase mb-1">{label}</p>
-      <p className="text-2xl font-extrabold text-slate-900 leading-none">
-        {value}
-        <span className="text-xs font-semibold text-gray-400 ml-1">{unit}</span>
-      </p>
+      <div className={`absolute -bottom-8 -right-8 w-28 h-28 rounded-full blur-xl pointer-events-none ${config.glowColor}`} />
+
+      <div className="shrink-0 z-10">{config.emblem}</div>
+
+      <div className="flex-1 min-w-0 z-10">
+        <p className="text-[11px] md:text-xs font-extrabold tracking-wider text-slate-400 uppercase mb-1">
+          {label}
+        </p>
+        <div className="flex items-baseline gap-1.5">
+          <span className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight leading-none">
+            {value}
+          </span>
+          <span className={`text-base md:text-lg font-bold ${config.unitColor}`}>
+            {unit}
+          </span>
+        </div>
+      </div>
+
+      <div className="absolute top-4 right-4 z-10">{config.badge}</div>
     </motion.div>
   );
 }
@@ -121,9 +321,9 @@ function ReviewList({ history, compact = false }: { history: AnswerRecord[]; com
   const columns = chunkArray(history, 5);
 
   return (
-    <div className={`grid gap-3 w-full h-full ${columns.length > 1 && !compact ? 'grid-cols-2' : 'grid-cols-1'}`}>
+    <div className={`grid gap-3.5 w-full h-full ${columns.length > 1 && !compact ? 'grid-cols-2' : 'grid-cols-1'}`}>
       {columns.map((column, colIndex) => (
-        <div key={colIndex} className="flex flex-col justify-between min-w-0 h-full gap-3">
+        <div key={colIndex} className="flex flex-col justify-between min-w-0 h-full gap-3.5">
           {column.map((h, i) => {
             const globalIndex = colIndex * 5 + i;
             return (
@@ -132,48 +332,53 @@ function ReviewList({ history, compact = false }: { history: AnswerRecord[]; com
                 initial={{ opacity: 0, x: 12 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 + globalIndex * 0.03, duration: 0.3, ease: 'easeOut' }}
-                className={`flex-1 bg-white border-2 rounded-xl flex items-center gap-3 px-3.5 py-2.5 min-w-0 ${
-                  h.isCorrect ? 'border-emerald-200' : 'border-red-200'
+                className={`p-4 rounded-2xl border transition-all flex flex-col justify-between ${
+                  h.isCorrect
+                    ? 'bg-emerald-50/30 border-emerald-200/80 hover:border-emerald-300'
+                    : 'bg-rose-50/30 border-rose-200/80 hover:border-rose-300'
                 }`}
               >
-                {/* Nomor Soal */}
-                <div
-                  className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
-                    h.isCorrect ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-600'
-                  }`}
-                >
-                  {globalIndex + 1}
-                </div>
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span
+                      className={`w-7 h-7 rounded-full text-xs font-black flex items-center justify-center shrink-0 shadow-xs ${
+                        h.isCorrect ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white'
+                      }`}
+                    >
+                      {globalIndex + 1}
+                    </span>
+                    <span
+                      className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-md border ${
+                        h.isCorrect
+                          ? 'bg-emerald-100/70 border-emerald-200 text-emerald-800'
+                          : 'bg-rose-100/70 border-rose-200 text-rose-800'
+                      }`}
+                    >
+                      {h.isCorrect ? <CheckIcon /> : <CrossIcon />}
+                      {h.isCorrect ? 'Tepat' : 'Keliru'}
+                    </span>
+                  </div>
 
-                {/* Teks Pertanyaan & Jawaban */}
-                <div className="flex-1 min-w-0 flex flex-col justify-center">
-                  <p className="font-semibold text-slate-900 text-xs leading-tight truncate">
+                  <p className="text-xs md:text-sm font-semibold text-slate-800 line-clamp-2 mb-2 leading-snug">
                     {h.text}
                   </p>
-                  <p className="text-[11px] text-gray-500 truncate mt-0.5">
-                    Dipilih:{' '}
-                    <span className={`font-semibold ${h.isCorrect ? 'text-emerald-700' : 'text-red-600'}`}>
-                      {h.selectedOption ?? 'Tidak dijawab'}
-                    </span>
-                    {!h.isCorrect && h.correctOption && (
-                      <>
-                        {' '}· Benar:{' '}
-                        <span className="font-semibold text-emerald-700">{h.correctOption}</span>
-                      </>
-                    )}
-                  </p>
                 </div>
 
-                {/* Status Tepat / Keliru & Waktu */}
-                <div className="shrink-0 text-right flex flex-col items-end justify-center">
-                  <span
-                    className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full leading-none ${
-                      h.isCorrect ? 'text-emerald-700 bg-emerald-50' : 'text-red-600 bg-red-50'
-                    }`}
-                  >
-                    {h.isCorrect ? 'Tepat' : 'Keliru'}
+                <div className="pt-2.5 border-t border-slate-200/60 flex items-center justify-between text-[11px] md:text-xs">
+                  <span className="text-slate-500 truncate max-w-[180px]">
+                    Dipilih:{' '}
+                    <strong className={h.isCorrect ? 'text-emerald-700 font-bold' : 'text-rose-700 font-bold'}>
+                      {h.selectedOption ?? 'Tidak dijawab'}
+                    </strong>
+                    {!h.isCorrect && h.correctOption && (
+                      <span className="text-emerald-700 ml-1 font-semibold">
+                        (Benar: {h.correctOption})
+                      </span>
+                    )}
                   </span>
-                  <p className="text-[10px] text-gray-400 mt-1 leading-none">{formatSeconds(h.responseTimeMs)} dtk</p>
+                  <span className="text-slate-400 font-semibold shrink-0 ml-1">
+                    {formatSeconds(h.responseTimeMs)} dtk
+                  </span>
                 </div>
               </motion.div>
             );
@@ -184,62 +389,111 @@ function ReviewList({ history, compact = false }: { history: AnswerRecord[]; com
   );
 }
 
+/* ==========================================================================
+   SOLO SCOREBOARD
+   ========================================================================== */
+
 export function SoloScoreboard({ data, onBack }: { data: ScoreData; onBack: () => void }) {
   const stats = computeStats(data);
 
   return (
-    <div className="flex-1 flex flex-col min-h-screen justify-center bg-slate-50/50 py-8">
-      {/* Header Utama */}
-      <div className="max-w-7xl w-full mx-auto px-8 mb-6 shrink-0 text-center">
-        <p className="text-xs font-bold tracking-widest text-gray-400 uppercase mb-1">Kuis Selesai</p>
-        <h2 className="text-4xl font-extrabold text-slate-900 tracking-tight mb-2">Papan Skor</h2>
-        <span className="inline-block text-xs font-semibold text-slate-600 bg-white border border-gray-200 px-3.5 py-1 rounded-full">
-          {data.category}
-        </span>
-      </div>
+    <div className="min-h-screen w-full flex items-center justify-center p-6 md:p-10 relative overflow-hidden bg-slate-50/70">
+      {/* Calm & Calm Professional Background Ambient */}
+      <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[850px] bg-gradient-to-tr from-indigo-100/40 via-slate-100/30 to-blue-100/40 blur-[140px] rounded-full pointer-events-none" />
 
-      {/* Container Utama Konten */}
-      <div className="max-w-7xl w-full mx-auto px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 w-full items-stretch">
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-[1380px] relative z-10 my-auto"
+      >
+        {/* Header Utama */}
+        <div className="text-center mb-8 md:mb-10">
+          <p className="text-xs font-extrabold tracking-widest text-slate-400 uppercase mb-1.5">Kuis Selesai</p>
+          <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-3.5">Papan Skor</h1>
+          <span className="inline-flex items-center gap-2.5 px-4.5 py-1.5 rounded-full bg-white border border-slate-200/90 shadow-2xs text-xs font-extrabold text-indigo-600">
+            <span className="w-2 h-2 rounded-full bg-indigo-500" />
+            {data.category}
+          </span>
+        </div>
+
+        {/* Layout Grid Berskala Besar & Seimbang */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          
           {/* Sisi Kiri: Ringkasan Skor & Statistik */}
-          <div className="lg:col-span-2 flex flex-col justify-between gap-3.5">
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white border border-gray-200 rounded-3xl p-6 flex flex-col items-center shadow-xs shrink-0"
-            >
-              <ScoreRing score={data.score} total={data.total} size={160} />
-              <p className="text-[10px] font-bold tracking-widest text-gray-400 uppercase mt-4 mb-0.5">Predikat</p>
-              <p className="text-xl font-extrabold text-slate-900">{getPredicate(stats.accuracy)}</p>
-            </motion.div>
+          <div className="lg:col-span-5 flex flex-col justify-between gap-5">
+            <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-3xl p-7 shadow-xs flex flex-col items-center text-center relative overflow-hidden flex-1 justify-center">
+              <ScoreRing score={data.score} total={data.total} size={210} />
 
-            <div className="grid grid-cols-2 gap-3 shrink-0">
-              <StatTile label="Ketepatan" value={stats.accuracy} unit="%" delay={0.3} />
-              <StatTile label="Rata-rata Jawab" value={formatSeconds(stats.avgMs)} unit="detik" delay={0.4} />
-              <StatTile label="Tercepat" value={formatSeconds(stats.fastestMs)} unit="detik" delay={0.5} />
-              <StatTile label="Total Waktu" value={formatSeconds(stats.totalMs)} unit="detik" delay={0.6} />
+              <div className="flex items-center gap-2 bg-gradient-to-r from-indigo-50/80 to-purple-50/80 border border-indigo-100 px-4 py-1.5 rounded-2xl mt-5 mb-1.5">
+                <AwardBadgeIcon className="w-4 h-4 text-indigo-600 shrink-0" />
+                <span className="text-[11px] font-black uppercase tracking-wider text-indigo-950">Predikat</span>
+              </div>
+              <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">{getPredicate(stats.accuracy)}</h2>
             </div>
 
-            <button
+            {/* Grid 4 Kartu Statistik */}
+            <div className="grid grid-cols-2 gap-3.5">
+              <StatTile
+                type="accuracy"
+                label="KETEPATAN"
+                value={stats.accuracy}
+                unit="%"
+                delay={0.3}
+              />
+              <StatTile
+                type="average"
+                label="RATA-RATA"
+                value={formatSeconds(stats.avgMs)}
+                unit="dtk"
+                delay={0.4}
+              />
+              <StatTile
+                type="fastest"
+                label="TERCEPAT"
+                value={formatSeconds(stats.fastestMs)}
+                unit="dtk"
+                delay={0.5}
+              />
+              <StatTile
+                type="totalTime"
+                label="TOTAL WAKTU"
+                value={formatSeconds(stats.totalMs)}
+                unit="dtk"
+                delay={0.6}
+              />
+            </div>
+
+            <motion.button
+              whileTap={{ scale: 0.98 }}
               onClick={onBack}
-              className="w-full px-6 py-3.5 bg-slate-900 text-white text-base font-semibold rounded-xl hover:bg-slate-800 transition shrink-0"
+              className="w-full flex items-center justify-center gap-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-base py-4 rounded-2xl shadow-sm hover:shadow-md transition-all cursor-pointer"
             >
-              Kembali ke Menu Utama
-            </button>
+              <BackHomeIcon className="w-5 h-5 text-white/80" />
+              <span>Kembali ke Menu Utama</span>
+            </motion.button>
           </div>
 
           {/* Sisi Kanan: Rincian Jawaban */}
-          <div className="lg:col-span-3 flex flex-col h-full">
-            <p className="text-xs font-bold text-gray-700 mb-2 shrink-0">Rincian Jawaban</p>
-            <div className="flex-1 w-full">
+          <div className="lg:col-span-7 bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-3xl p-7 shadow-xs flex flex-col justify-between">
+            <div className="flex items-center justify-between mb-4 px-1">
+              <h3 className="text-xs font-black uppercase tracking-wider text-slate-400">Rincian Jawaban</h3>
+              <span className="text-xs font-bold text-slate-400">{data.history.length} Soal</span>
+            </div>
+            
+            <div className="max-h-[620px] overflow-y-auto pr-1 flex-1">
               <ReviewList history={data.history} />
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
+
+/* ==========================================================================
+   DUEL SCOREBOARD (MULTIPLAYER)
+   ========================================================================== */
 
 function PlayerCard({
   label,
@@ -259,18 +513,23 @@ function PlayerCard({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.6 }}
-      className={`flex-1 bg-white border-2 rounded-3xl p-6 flex flex-col items-center ${
-        highlighted ? 'border-slate-900 shadow-lg' : 'border-gray-200 shadow-sm'
+      className={`flex-1 bg-white/95 backdrop-blur-xl border rounded-3xl p-7 flex flex-col items-center relative overflow-hidden ${
+        highlighted ? 'border-indigo-500 ring-2 ring-indigo-500/20 shadow-md' : 'border-slate-200/90 shadow-xs'
       }`}
     >
       {highlighted && (
-        <span className="text-xs font-bold text-white bg-slate-900 px-3 py-1 rounded-full mb-3">Unggul</span>
+        <span className="bg-indigo-600 text-white text-[10px] font-black px-3.5 py-1 rounded-full uppercase tracking-wider mb-3">
+          Pemenang
+        </span>
       )}
-      <p className="text-xl font-extrabold text-slate-900 tracking-tight">{label}</p>
-      <p className="text-xs text-gray-400 mb-4">{data.category}</p>
-      <ScoreRing score={data.score} total={data.total} size={150} />
-      <p className="text-[10px] font-bold tracking-widest text-gray-400 uppercase mt-4 mb-1">Predikat</p>
-      <p className="text-lg font-extrabold text-slate-900">{getPredicate(accuracy)}</p>
+      <p className="text-2xl font-black text-slate-900 tracking-tight">{label}</p>
+      <p className="text-xs text-slate-400 font-bold mb-5">{data.category}</p>
+      <ScoreRing score={data.score} total={data.total} size={170} />
+      <div className="flex items-center gap-1.5 bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100/80 px-3.5 py-1 rounded-xl mt-5 mb-1.5">
+        <AwardBadgeIcon className="w-4 h-4 text-indigo-600 shrink-0" />
+        <span className="text-[10px] font-black uppercase tracking-wider text-indigo-900">Predikat</span>
+      </div>
+      <p className="text-lg font-black text-slate-900">{getPredicate(accuracy)}</p>
     </motion.div>
   );
 }
@@ -302,12 +561,12 @@ function CompareRow({
   return (
     <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-6">
       <div className="flex items-center gap-4">
-        <span className={`w-20 text-right text-lg font-extrabold ${leader === 'a' ? 'text-slate-900' : 'text-gray-400'}`}>
+        <span className={`w-20 text-right text-lg font-black ${leader === 'a' ? 'text-indigo-600' : 'text-slate-400'}`}>
           {aText}
         </span>
-        <div className="flex-1 h-2.5 rounded-full bg-gray-100 overflow-hidden flex justify-end">
+        <div className="flex-1 h-2.5 rounded-full bg-slate-100 overflow-hidden flex justify-end">
           <motion.div
-            className={`h-full rounded-full ${leader === 'a' ? 'bg-slate-900' : 'bg-slate-300'}`}
+            className={`h-full rounded-full ${leader === 'a' ? 'bg-indigo-600' : 'bg-slate-300'}`}
             initial={{ width: 0 }}
             animate={{ width: `${shareA * 100}%` }}
             transition={{ duration: 1, delay, ease: 'easeOut' }}
@@ -315,18 +574,18 @@ function CompareRow({
         </div>
       </div>
 
-      <span className="w-36 text-center text-xs font-bold tracking-widest text-gray-400 uppercase">{label}</span>
+      <span className="w-36 text-center text-xs font-black tracking-widest text-slate-400 uppercase">{label}</span>
 
       <div className="flex items-center gap-4">
-        <div className="flex-1 h-2.5 rounded-full bg-gray-100 overflow-hidden">
+        <div className="flex-1 h-2.5 rounded-full bg-slate-100 overflow-hidden">
           <motion.div
-            className={`h-full rounded-full ${leader === 'b' ? 'bg-slate-900' : 'bg-slate-300'}`}
+            className={`h-full rounded-full ${leader === 'b' ? 'bg-indigo-600' : 'bg-slate-300'}`}
             initial={{ width: 0 }}
             animate={{ width: `${shareB * 100}%` }}
             transition={{ duration: 1, delay, ease: 'easeOut' }}
           />
         </div>
-        <span className={`w-20 text-left text-lg font-extrabold ${leader === 'b' ? 'text-slate-900' : 'text-gray-400'}`}>
+        <span className={`w-20 text-left text-lg font-black ${leader === 'b' ? 'text-indigo-600' : 'text-slate-400'}`}>
           {bText}
         </span>
       </div>
@@ -352,29 +611,31 @@ export function DuelScoreboard({ result, onBack }: { result: DuelData; onBack: (
   }
 
   return (
-    <div className="flex-1 bg-slate-50/50 min-h-screen">
-      <div className="max-w-6xl mx-auto px-10 py-8">
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8">
-          <p className="text-xs font-bold tracking-widest text-gray-400 uppercase mb-2">Pertandingan Selesai</p>
-          <h2 className="text-4xl font-extrabold text-slate-900 tracking-tight mb-3">Papan Skor</h2>
-          <span className="inline-block text-sm font-bold text-white bg-slate-900 px-6 py-2 rounded-full">
+    <div className="min-h-screen bg-slate-50/70 py-10 px-6 md:px-10 relative overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
+
+      <div className="max-w-[1380px] mx-auto relative z-10">
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
+          <p className="text-xs font-black tracking-widest text-slate-400 uppercase mb-1.5">Pertandingan Selesai</p>
+          <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-3.5">Papan Skor Duel</h2>
+          <span className="inline-block text-xs font-black text-white bg-slate-900 px-6 py-2 rounded-full shadow-xs uppercase tracking-wider">
             {verdict}
           </span>
-          {note && <p className="text-xs text-gray-500 mt-2">{note}</p>}
+          {note && <p className="text-xs text-slate-500 font-bold mt-2.5">{note}</p>}
         </motion.div>
 
         <div className="flex items-stretch gap-6 mb-8">
           <PlayerCard label="Pemain 1" data={result.a} accuracy={sa.accuracy} highlighted={winner === 'a'} delay={0.1} />
           <div className="flex items-center">
-            <div className="w-12 h-12 rounded-full bg-white border border-gray-200 shadow-xs flex items-center justify-center">
-              <span className="text-xs font-extrabold italic tracking-widest text-slate-400">VS</span>
+            <div className="w-13 h-13 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex items-center justify-center">
+              <span className="text-xs font-black italic tracking-widest text-slate-400">VS</span>
             </div>
           </div>
           <PlayerCard label="Pemain 2" data={result.b} accuracy={sb.accuracy} highlighted={winner === 'b'} delay={0.2} />
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-3xl p-8 mb-8 shadow-xs">
-          <p className="text-center text-xs font-bold tracking-widest text-gray-400 uppercase mb-6">
+        <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-3xl p-8 mb-8 shadow-xs">
+          <p className="text-center text-xs font-black tracking-widest text-slate-400 uppercase mb-6">
             Perbandingan Langsung
           </p>
           <div className="flex flex-col gap-5">
@@ -386,23 +647,25 @@ export function DuelScoreboard({ result, onBack }: { result: DuelData; onBack: (
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div>
-            <p className="text-xs font-bold text-gray-700 mb-3">Rincian Pemain 1</p>
+          <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-3xl p-7 shadow-xs">
+            <p className="text-xs font-black text-slate-700 mb-4 uppercase tracking-wider">Rincian Pemain 1</p>
             <ReviewList history={result.a.history} compact />
           </div>
-          <div>
-            <p className="text-xs font-bold text-gray-700 mb-3">Rincian Pemain 2</p>
+          <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-3xl p-7 shadow-xs">
+            <p className="text-xs font-black text-slate-700 mb-4 uppercase tracking-wider">Rincian Pemain 2</p>
             <ReviewList history={result.b.history} compact />
           </div>
         </div>
 
-        <div className="flex justify-center mt-8">
-          <button
+        <div className="flex justify-center mt-10">
+          <motion.button
+            whileTap={{ scale: 0.98 }}
             onClick={onBack}
-            className="px-8 py-3.5 bg-slate-900 text-white text-base font-semibold rounded-xl hover:bg-slate-800 transition"
+            className="px-8 py-4 bg-slate-900 hover:bg-slate-800 text-white font-bold text-base rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center gap-2.5 cursor-pointer"
           >
-            Kembali ke Menu Utama
-          </button>
+            <BackHomeIcon className="w-5 h-5 text-white/80" />
+            <span>Kembali ke Menu Utama</span>
+          </motion.button>
         </div>
       </div>
     </div>
