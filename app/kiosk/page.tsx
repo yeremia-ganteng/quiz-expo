@@ -284,7 +284,7 @@ export default function KioskPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 relative overflow-hidden select-none">
+    <div className="h-screen w-screen flex flex-col bg-slate-50 relative overflow-hidden select-none">
       <AnimatePresence>
         {!isConnected && (
           <motion.div
@@ -326,13 +326,13 @@ export default function KioskPage() {
       {uiPhase === 'landing' && (
         <div className="flex-1 flex items-center justify-center p-10">
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center">
-            <p className="text-lg font-bold tracking-widest text-gray-400 uppercase mb-5">
+            <p className="text-lg font-bold tracking-widest text-slate-400 uppercase mb-5">
               Evaluasi Mandiri &amp; Wawasan
             </p>
             <h1 className="text-8xl font-extrabold text-slate-900 tracking-tight mb-6">
               Kuis Interaktif Kampus
             </h1>
-            <p className="text-2xl text-gray-500 mb-10 max-w-2xl mx-auto">
+            <p className="text-2xl text-slate-500 mb-10 max-w-2xl mx-auto">
               Sentuh layar untuk memulai dan uji wawasanmu.
             </p>
 
@@ -352,8 +352,8 @@ export default function KioskPage() {
                     exit={{ opacity: 0, y: -8 }}
                     transition={{ duration: 0.4 }}
                     className={`text-xl font-semibold px-8 py-3 rounded-full ${
-                      CATEGORY_META[categories[previewIndex]]?.iconBg ?? 'bg-gray-50'
-                    } ${CATEGORY_META[categories[previewIndex]]?.color ?? 'text-gray-600'}`}
+                      CATEGORY_META[categories[previewIndex]]?.iconBg ?? 'bg-slate-100'
+                    } ${CATEGORY_META[categories[previewIndex]]?.color ?? 'text-slate-600'}`}
                   >
                     Coba tema: {categories[previewIndex]}
                   </motion.span>
@@ -497,7 +497,7 @@ export default function KioskPage() {
         )
       )}
 
-      {/* PLAYING - MULTIPLAYER: pilih tema */}
+      {/* PLAYING - MULTIPLAYER: PILIH TEMA */}
       {uiPhase === 'playing' && mode === 'multiplayer' && bothStillSelecting && (
         <DuelCategorySelect
           stateA={stateA}
@@ -509,13 +509,13 @@ export default function KioskPage() {
         />
       )}
 
-      {/* PLAYING - MULTIPLAYER: sedang bertanding atau papan skor */}
+      {/* PLAYING - MULTIPLAYER: SEDANG BERTANDING ATAU PAPAN SKOR */}
       {uiPhase === 'playing' && mode === 'multiplayer' && !bothStillSelecting && (
         duelResult ? (
           <DuelScoreboard result={duelResult} onBack={resetToLanding} />
         ) : (
           <div className="flex-1 flex">
-            <div className="flex-1 border-r border-gray-200 flex items-center justify-center p-6 relative">
+            <div className="flex-1 border-r border-slate-200 flex items-center justify-center p-6 relative overflow-hidden">
               <PanelBadge label="Pemain 1" />
               <QuizPanel
                 size="compact"
@@ -526,7 +526,7 @@ export default function KioskPage() {
                 onAnswer={(opt) => handleAnswer(sendA, stateA, startTimeA, opt)}
               />
             </div>
-            <div className="flex-1 flex items-center justify-center p-6 relative">
+            <div className="flex-1 flex items-center justify-center p-6 relative overflow-hidden">
               <PanelBadge label="Pemain 2" />
               <QuizPanel
                 size="compact"
@@ -552,7 +552,7 @@ export default function KioskPage() {
 
 function PanelBadge({ label }: { label: string }) {
   return (
-    <div className="absolute top-6 left-1/2 -translate-x-1/2 flex items-center gap-2">
+    <div className="absolute top-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10">
       <span className="w-2 h-2 rounded-full bg-slate-900" />
       <span className="text-sm font-extrabold tracking-widest text-slate-700 uppercase">
         {label}
@@ -577,20 +577,30 @@ function DuelCategorySelect({
   onChooseCategoryB: (category: string) => void;
 }) {
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-10 relative">
-      <div className="text-center mb-14">
-        <p className="text-sm font-bold tracking-widest text-gray-400 uppercase mb-3">
-          Evaluasi Mandiri &amp; Wawasan
-        </p>
-        <h2 className="text-6xl font-extrabold text-slate-900 mb-4 tracking-tight">Pilih Tema Kuis</h2>
-        <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+    <div className="flex-1 flex flex-col justify-start pt-6 md:pt-10 pb-8 px-6 md:px-10 bg-slate-50 relative h-full w-full overflow-hidden">
+      {/* Header Judul - Posisi Turun Agak Santai */}
+      <div className="text-center z-10 shrink-0 mb-6 md:mb-8">
+        <div className="flex items-center justify-center gap-2 mb-1.5">
+          <span className="w-6 h-[1.5px] bg-slate-400/80" />
+          <p className="text-xs font-bold tracking-[0.25em] text-slate-500 uppercase">
+            EVALUASI MANDIRI &amp; WAWASAN
+          </p>
+          <span className="w-6 h-[1.5px] bg-slate-400/80" />
+        </div>
+        <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">
+          Pilih Tema Kuis
+        </h2>
+        <p className="text-slate-500 text-sm md:text-base font-medium mt-1.5">
           Tentukan bidang keilmuan pada tiap sisi layar, lalu mulai pertandingan bersama.
         </p>
       </div>
 
-      <div className="relative flex w-full max-w-[1600px] gap-20">
-        <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-gray-200 -translate-x-1/2" />
+      {/* Main Container - max-w-[1450px] agar kartu sangat besar & lebar tapi tidak nempel tepi desktop */}
+      <div className="relative flex-1 flex w-full max-w-[1450px] gap-8 md:gap-12 items-start justify-center mx-auto min-h-0">
+        {/* Pembatas Vertikal Tengah */}
+        <div className="hidden md:block absolute left-1/2 top-4 bottom-4 w-[1px] bg-slate-200 -translate-x-1/2 z-10" />
 
+        {/* Pemain 1 */}
         <DuelColumn
           label="Pemain 1"
           state={stateA}
@@ -598,6 +608,8 @@ function DuelCategorySelect({
           allQuestions={allQuestions}
           onChooseCategory={onChooseCategoryA}
         />
+
+        {/* Pemain 2 */}
         <DuelColumn
           label="Pemain 2"
           state={stateB}
@@ -605,10 +617,13 @@ function DuelCategorySelect({
           allQuestions={allQuestions}
           onChooseCategory={onChooseCategoryB}
         />
-      </div>
 
-      <div className="hidden md:flex fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full bg-white border border-gray-200 shadow-md items-center justify-center z-30">
-        <span className="text-lg font-extrabold italic tracking-widest text-slate-400">VS</span>
+        {/* Badge VS Tengah */}
+        <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-gradient-to-b from-blue-600 to-indigo-600 shadow-xl shadow-indigo-500/30 items-center justify-center z-30 border-4 border-slate-50 pointer-events-none">
+          <span className="text-white text-lg font-black italic tracking-wider">
+            VS
+          </span>
+        </div>
       </div>
     </div>
   );
@@ -628,55 +643,111 @@ function DuelColumn({
   onChooseCategory: (category: string) => void;
 }) {
   const hasSelected = state.matches('ready');
+  const selectedCategory = state.context.category;
 
   return (
-    <div className="flex-1 flex flex-col gap-5">
-      <div className="text-center mb-1">
-        <h3 className="text-2xl font-extrabold text-slate-900 mb-2 tracking-tight">{label}</h3>
-        <span
-          className={`inline-block text-sm font-semibold px-4 py-1.5 rounded-full ${
-            hasSelected ? 'text-emerald-700 bg-emerald-50' : 'text-amber-700 bg-amber-50'
-          }`}
-        >
-          {hasSelected ? `Tema terpilih: ${state.context.category}` : 'Menunggu Pilihan'}
-        </span>
+    <div className="flex-1 flex flex-col gap-4 w-full h-full justify-start">
+      {/* Header Status Pemain */}
+      <div className="flex flex-col items-center shrink-0 mb-1">
+        <div className="inline-flex items-center gap-2.5 px-8 py-2.5 rounded-full bg-white border border-slate-200/90 shadow-xs mb-2">
+          <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center text-white">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+            </svg>
+          </div>
+          <h3 className="text-2xl font-bold text-slate-900 tracking-tight">{label}</h3>
+        </div>
+
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50/90 border border-indigo-100 text-indigo-700 text-xs font-bold">
+          <span
+            className={`w-2.5 h-2.5 rounded-full transition-colors duration-300 ${
+              hasSelected ? 'bg-emerald-500' : 'bg-indigo-500'
+            }`}
+          />
+          <span>
+            {hasSelected ? `Tema Terpilih: ${selectedCategory}` : 'Menunggu Pilihan'}
+          </span>
+        </div>
       </div>
 
-      <div className="flex flex-col gap-4 max-h-520px overflow-y-auto pr-1">
+      {/* List Kartu Menu Tema RAKSASA */}
+      <div className="flex flex-col gap-5 px-1 py-1 overflow-y-auto max-h-[calc(100vh-280px)]">
         {categories.map((cat) => {
           const m = CATEGORY_META[cat];
           const count = allQuestions.filter((q) => q.category === cat).length;
-          const isSelected = state.context.category === cat;
+          const isSelected = selectedCategory === cat;
 
           return (
             <div
               key={cat}
-              className={`bg-white border-2 rounded-2xl p-7 flex items-center gap-6 transition-colors ${
-                isSelected ? 'border-slate-900' : 'border-gray-200'
+              onClick={() => onChooseCategory(cat)}
+              className={`cursor-pointer bg-white rounded-3xl p-7 md:p-8 flex items-center gap-7 border transition-all duration-200 shadow-xs ${
+                isSelected
+                  ? 'border-indigo-600 ring-4 ring-indigo-600/20 bg-indigo-50/30 shadow-lg'
+                  : 'border-slate-200/90 hover:border-indigo-300 hover:shadow-md'
               }`}
             >
-              <div className={`rounded-xl ${m?.iconBg} ${m?.color} flex items-center justify-center shrink-0 ${isSelected ? 'w-14 h-14' : 'w-12 h-12'}`}>
-                {m?.icon}
+              {/* Icon Box Super Besar (24 x 24) */}
+              <div
+                className={`w-20 h-20 md:w-24 md:h-24 rounded-2xl flex items-center justify-center shrink-0 transition-colors duration-200 ${
+                  isSelected
+                    ? 'bg-indigo-600 text-white shadow-md'
+                    : 'bg-indigo-50/80 border border-indigo-100 text-indigo-600'
+                }`}
+              >
+                {m?.icon ? (
+                  <div className="scale-150">{m.icon}</div>
+                ) : (
+                  <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                    />
+                  </svg>
+                )}
               </div>
+
+              {/* Detail Teks Tema Extra Jumbo */}
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-3 mb-1.5">
-                  <p className="text-xl font-bold text-slate-900 tracking-tight">{cat}</p>
-                  <span className="text-xs font-semibold text-gray-400 bg-gray-50 border border-gray-200 px-2 py-0.5 rounded">
+                <div className="flex items-center gap-3 mb-2">
+                  <h4 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight truncate">
+                    {cat}
+                  </h4>
+                  <span className="text-xs md:text-sm font-bold text-slate-600 bg-slate-100 border border-slate-200/80 px-3 py-1 rounded-lg shrink-0">
                     {count} Soal
                   </span>
                 </div>
-                <p className="text-sm text-gray-400 truncate">{m?.description}</p>
+                <p className="text-xs md:text-base text-slate-500 font-medium leading-relaxed line-clamp-2">
+                  {m?.description}
+                </p>
               </div>
 
+              {/* Tombol Aksi */}
               <button
-                onClick={() => onChooseCategory(cat)}
-                className={`text-sm font-semibold px-7 py-3.5 rounded-xl transition shrink-0 ${
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onChooseCategory(cat);
+                }}
+                className={`flex items-center justify-center gap-2 px-7 py-4 rounded-2xl font-extrabold text-sm md:text-base transition-all duration-200 shrink-0 shadow-xs ${
                   isSelected
-                    ? 'bg-slate-100 text-slate-900'
-                    : 'bg-slate-900 hover:bg-slate-800 text-white'
+                    ? 'bg-indigo-600 text-white'
+                    : 'bg-slate-900 hover:bg-indigo-600 text-white'
                 }`}
               >
-                {isSelected ? 'Terpilih' : 'Pilih Topik'}
+                <span>{isSelected ? 'Terkunci ✓' : 'Pilih Topik'}</span>
+                {!isSelected && (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2.5"
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    />
+                  </svg>
+                )}
               </button>
             </div>
           );
@@ -782,14 +853,14 @@ function QuizPanel({
           className={isFull ? 'w-full max-w-2xl' : 'w-full max-w-xl'}
         >
           <div className="flex items-center justify-between gap-3 mb-6">
-            <span className={`font-bold ${meta?.color} ${meta?.iconBg} border border-gray-200 rounded-full ${isFull ? 'text-xs px-3.5 py-1.5' : 'text-sm px-4 py-2'}`}>
+            <span className={`font-bold ${meta?.color} ${meta?.iconBg} border border-slate-200 rounded-full ${isFull ? 'text-xs px-3.5 py-1.5' : 'text-sm px-4 py-2'}`}>
               {activeCategory}
             </span>
-            <span className={`text-gray-400 font-semibold ${isFull ? 'text-xs' : 'text-sm'}`}>
+            <span className={`text-slate-400 font-semibold ${isFull ? 'text-xs' : 'text-sm'}`}>
               {state.context.currentIndex + 1} / {state.context.questions.length}
             </span>
           </div>
-          <div className={`bg-white border border-gray-200 rounded-2xl shadow-sm ${isFull ? 'p-8' : 'p-10'}`}>
+          <div className={`bg-white border border-slate-200 rounded-2xl shadow-sm ${isFull ? 'p-8' : 'p-10'}`}>
             <h2 className={`font-bold text-slate-900 leading-snug ${isFull ? 'text-2xl mb-8' : 'text-3xl mb-10'}`}>
               {currentQuestion.text}
             </h2>
@@ -799,9 +870,9 @@ function QuizPanel({
                   key={opt}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => onAnswer(opt)}
-                  className={`group flex items-center gap-4 bg-gray-50 border-2 border-transparent rounded-xl text-left font-medium text-gray-700 hover:bg-white transition-all hover:${meta?.ring} px-6 py-5 text-lg`}
+                  className={`group flex items-center gap-4 bg-slate-50 border-2 border-transparent rounded-xl text-left font-medium text-slate-700 hover:bg-white transition-all hover:${meta?.ring} px-6 py-5 text-lg`}
                 >
-                  <span className={`shrink-0 rounded-full border-2 border-gray-300 group-hover:${meta?.ring} flex items-center justify-center font-bold text-gray-500 ${
+                  <span className={`shrink-0 rounded-full border-2 border-slate-300 group-hover:${meta?.ring} flex items-center justify-center font-bold text-slate-500 ${
                     isFull ? 'w-9 h-9 text-sm' : 'w-10 h-10 text-base'
                   }`}>
                     {OPTION_LABELS[i]}
@@ -814,7 +885,7 @@ function QuizPanel({
         </motion.div>
       )}
 
-      {/* FEEDBACK - POPUP OVERLAY */}
+      {/* FEEDBACK - POPUP OVERLAY LOKAL */}
       {state.matches('feedback') && currentQuestion && (() => {
         const correctOptionIndex = currentQuestion.options.findIndex(
           (opt) => opt === serverCorrectOption
@@ -825,14 +896,14 @@ function QuizPanel({
           <div className="relative w-full">
             <div className="w-full max-w-2xl mx-auto opacity-30 pointer-events-none transition-opacity duration-300">
               <div className="flex items-center justify-between gap-3 mb-6">
-                <span className={`font-bold ${meta?.color} ${meta?.iconBg} border border-gray-200 rounded-full ${isFull ? 'text-xs px-3.5 py-1.5' : 'text-sm px-4 py-2'}`}>
+                <span className={`font-bold ${meta?.color} ${meta?.iconBg} border border-slate-200 rounded-full ${isFull ? 'text-xs px-3.5 py-1.5' : 'text-sm px-4 py-2'}`}>
                   {activeCategory}
                 </span>
-                <span className={`text-gray-400 font-semibold ${isFull ? 'text-xs' : 'text-sm'}`}>
+                <span className={`text-slate-400 font-semibold ${isFull ? 'text-xs' : 'text-sm'}`}>
                   {state.context.currentIndex + 1} / {state.context.questions.length}
                 </span>
               </div>
-              <div className={`bg-white border border-gray-200 rounded-2xl shadow-sm ${isFull ? 'p-8' : 'p-10'}`}>
+              <div className={`bg-white border border-slate-200 rounded-2xl shadow-sm ${isFull ? 'p-8' : 'p-10'}`}>
                 <h2 className={`font-bold text-slate-900 leading-snug ${isFull ? 'text-2xl mb-8' : 'text-3xl mb-10'}`}>
                   {currentQuestion.text}
                 </h2>
@@ -840,9 +911,9 @@ function QuizPanel({
                   {currentQuestion.options.map((opt, i) => (
                     <div
                       key={opt}
-                      className="flex items-center gap-4 bg-gray-50 border-2 border-transparent rounded-xl px-6 py-5 text-lg font-medium text-gray-700"
+                      className="flex items-center gap-4 bg-slate-50 border-2 border-transparent rounded-xl px-6 py-5 text-lg font-medium text-slate-700"
                     >
-                      <span className="w-9 h-9 rounded-full border-2 border-gray-300 flex items-center justify-center font-bold text-gray-500 text-sm">
+                      <span className="w-9 h-9 rounded-full border-2 border-slate-300 flex items-center justify-center font-bold text-slate-500 text-sm">
                         {OPTION_LABELS[i]}
                       </span>
                       {opt}
@@ -858,7 +929,11 @@ function QuizPanel({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2, ease: 'easeOut' }}
-              className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/30 backdrop-blur-md backdrop-saturate-150 p-6 will-change-transform"
+              className={
+                isFull
+                  ? "fixed inset-0 z-50 flex items-center justify-center bg-slate-900/30 backdrop-blur-md backdrop-saturate-150 p-6 will-change-transform"
+                  : "absolute inset-0 z-50 flex items-center justify-center bg-slate-900/30 backdrop-blur-md backdrop-saturate-150 p-4 rounded-3xl will-change-transform"
+              }
             >
               <motion.div
                 initial={{ scale: 0.9, opacity: 0, y: 10 }}
@@ -868,7 +943,7 @@ function QuizPanel({
                   duration: 0.25,
                   ease: [0.16, 1, 0.3, 1],
                 }}
-                className={`flex flex-col items-center justify-center p-10 md:p-12 rounded-3xl shadow-2xl border text-center max-w-lg w-full bg-white/95 backdrop-blur-xl ${
+                className={`flex flex-col items-center justify-center p-8 md:p-10 rounded-3xl shadow-2xl border text-center max-w-sm md:max-w-md w-full bg-white/95 backdrop-blur-xl ${
                   state.context.lastAnswerCorrect
                     ? 'border-emerald-200/80 shadow-emerald-500/15'
                     : 'border-rose-200/80 shadow-rose-500/15'
@@ -878,18 +953,18 @@ function QuizPanel({
                   initial={{ scale: 0.4, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ type: 'spring', stiffness: 300, damping: 22 }}
-                  className={`w-20 h-20 rounded-full flex items-center justify-center mb-6 shadow-md ${
+                  className={`w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-5 shadow-md ${
                     state.context.lastAnswerCorrect
                       ? 'bg-emerald-500 text-white shadow-emerald-500/30'
                       : 'bg-rose-500 text-white shadow-rose-500/30'
                   }`}
                 >
                   {state.context.lastAnswerCorrect ? (
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                   ) : (
-                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                       <line x1="18" y1="6" x2="6" y2="18" />
                       <line x1="6" y1="6" x2="18" y2="18" />
                     </svg>
@@ -897,7 +972,7 @@ function QuizPanel({
                 </motion.div>
 
                 <h3
-                  className={`text-3xl md:text-4xl font-extrabold tracking-tight mb-2 ${
+                  className={`text-2xl md:text-3xl font-extrabold tracking-tight mb-1 ${
                     state.context.lastAnswerCorrect ? 'text-emerald-600' : 'text-rose-600'
                   }`}
                 >
@@ -905,17 +980,17 @@ function QuizPanel({
                 </h3>
 
                 {!state.context.lastAnswerCorrect && serverCorrectOption && (
-                  <div className="mt-5 p-4 rounded-2xl bg-slate-50 border border-slate-200/80 w-full text-left">
-                    <p className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-2">
+                  <div className="mt-4 p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 w-full text-left">
+                    <p className="text-[10px] md:text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-1.5">
                       Jawaban Yang Benar:
                     </p>
-                    <div className="flex items-center gap-3 bg-emerald-50/80 border border-emerald-200 p-3 rounded-xl">
+                    <div className="flex items-center gap-2.5 bg-emerald-50/80 border border-emerald-200 p-2.5 rounded-xl">
                       {correctLabel && (
-                        <span className="w-8 h-8 rounded-full bg-emerald-500 text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-xs">
+                        <span className="w-7 h-7 rounded-full bg-emerald-500 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs">
                           {correctLabel}
                         </span>
                       )}
-                      <span className="text-sm font-semibold text-emerald-950 leading-snug">
+                      <span className="text-xs md:text-sm font-semibold text-emerald-950 leading-snug">
                         {serverCorrectOption}
                       </span>
                     </div>
@@ -932,12 +1007,12 @@ function QuizPanel({
           key="results"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className={`text-center bg-white border border-gray-200 rounded-2xl shadow-sm ${isFull ? 'px-16 py-14' : 'px-10 py-10'}`}
+          className={`text-center bg-white border border-slate-200 rounded-2xl shadow-sm ${isFull ? 'px-16 py-14' : 'px-10 py-10'}`}
         >
-          <p className="text-gray-400 font-bold tracking-widest uppercase text-xs mb-2">Kuis Selesai</p>
+          <p className="text-slate-400 font-bold tracking-widest uppercase text-xs mb-2">Kuis Selesai</p>
           <p className="text-5xl font-extrabold text-slate-900 mb-1">{state.context.score}</p>
-          <p className="text-gray-400 text-sm mb-3">dari {state.context.questions.length}</p>
-          <p className="text-gray-500 text-sm">
+          <p className="text-slate-400 text-sm mb-3">dari {state.context.questions.length}</p>
+          <p className="text-slate-500 text-sm">
             {isFull ? 'Terima kasih sudah berpartisipasi' : 'Menunggu pemain lain menyelesaikan kuis...'}
           </p>
         </motion.div>
