@@ -10,6 +10,7 @@ import { quizMachine, type QuestionData } from '@/machines/quizMachine';
 import { SoloScoreboard, DuelScoreboard, type DuelData } from './components/Scoreboard';
 import { TechAIIcon, GeneralKnowledgeIcon, DigitalLiteracyIcon } from './components/CategoryIcons';
 import { SoloModeIcon, VersusModeIcon } from './components/ModeIcons';
+
 import { socket } from '@/lib/socket';
 
 interface CategoryMetaItem {
@@ -49,6 +50,7 @@ const CATEGORY_META: Record<string, CategoryMetaItem> = {
 };
 
 const OPTION_LABELS = ['A', 'B', 'C', 'D'];
+const QUIZ_SIZE = 10;
 
 type QuizState = StateFrom<typeof quizMachine>;
 type UiPhase = 'landing' | 'modeSelect' | 'playing';
@@ -65,7 +67,7 @@ function shuffleArray<T>(arr: T[]): T[] {
 
 function buildQuizSet(all: QuestionData[], category: string): QuestionData[] {
   const filtered = all.filter((q) => q.category === category);
-  const picked = shuffleArray(filtered).slice(0, 10);
+  const picked = shuffleArray(filtered).slice(0, QUIZ_SIZE);
   return picked.map((q) => ({ ...q, options: shuffleArray(q.options) }));
 }
 
@@ -284,7 +286,8 @@ export default function KioskPage() {
   };
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-slate-50 relative overflow-hidden select-none">
+    /* PERBAIKAN 1: Mengubah h-screen overflow-hidden menjadi min-h-screen overflow-y-auto agar halaman bisa di-scroll */
+    <div className="min-h-screen w-full flex flex-col bg-slate-50 relative overflow-y-auto select-none">
       <AnimatePresence>
         {!isConnected && (
           <motion.div
@@ -324,7 +327,7 @@ export default function KioskPage() {
 
       {/* LANDING */}
       {uiPhase === 'landing' && (
-        <div className="flex-1 flex items-center justify-center p-10">
+        <div className="flex-1 flex items-center justify-center p-10 min-h-screen">
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center">
             <p className="text-lg font-bold tracking-widest text-slate-400 uppercase mb-5">
               Evaluasi Mandiri &amp; Wawasan
@@ -375,7 +378,7 @@ export default function KioskPage() {
 
       {/* MODE SELECT */}
       {uiPhase === 'modeSelect' && (
-        <div className="flex-1 flex items-center justify-center p-8">
+        <div className="flex-1 flex items-center justify-center p-8 min-h-screen">
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center w-full max-w-3xl">
             <p className="text-xs font-bold tracking-widest text-slate-400 uppercase mb-2">
               Evaluasi Mandiri &amp; Wawasan
@@ -483,8 +486,15 @@ export default function KioskPage() {
             }}
             onBack={resetToLanding}
           />
+                 ) : stateA.matches('categorySelect') ? (
+          <SoloCategorySelect
+            state={stateA}
+            categories={categories}
+            allQuestions={allQuestions}
+            onChooseCategory={(cat) => handleChooseCategory(sendA, cat, true)}
+          />
         ) : (
-          <div className="flex-1 flex items-center justify-center p-8">
+          <div className="flex-1 flex items-center justify-center p-8 min-h-screen">
             <QuizPanel
               size="full"
               state={stateA}
@@ -514,7 +524,7 @@ export default function KioskPage() {
         duelResult ? (
           <DuelScoreboard result={duelResult} onBack={resetToLanding} />
         ) : (
-          <div className="flex-1 flex">
+          <div className="flex-1 flex min-h-screen">
             <div className="flex-1 border-r border-slate-200 flex items-center justify-center p-6 relative overflow-hidden">
               <PanelBadge label="Pemain 1" />
               <QuizPanel
@@ -577,53 +587,181 @@ function DuelCategorySelect({
   onChooseCategoryB: (category: string) => void;
 }) {
   return (
-    <div className="flex-1 flex flex-col justify-start pt-6 md:pt-10 pb-8 px-6 md:px-10 bg-slate-50 relative h-full w-full overflow-hidden">
-      {/* Header Judul - Posisi Turun Agak Santai */}
-      <div className="text-center z-10 shrink-0 mb-6 md:mb-8">
-        <div className="flex items-center justify-center gap-2 mb-1.5">
-          <span className="w-6 h-[1.5px] bg-slate-400/80" />
+    /* PERBAIKAN 2: Container menggunakan min-h-screen & py-12 agar layout fleksibel dan bisa di-scroll jika layar pendek */
+    <div className="min-h-screen w-full flex flex-col justify-center py-12 px-6 md:px-10 bg-slate-50 relative">
+      {/* Header Judul */}
+      <div className="text-center z-10 shrink-0 mb-8 md:mb-10">
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <span className="w-8 h-[1.5px] bg-slate-400/80" />
           <p className="text-xs font-bold tracking-[0.25em] text-slate-500 uppercase">
             EVALUASI MANDIRI &amp; WAWASAN
           </p>
-          <span className="w-6 h-[1.5px] bg-slate-400/80" />
+          <span className="w-8 h-[1.5px] bg-slate-400/80" />
         </div>
-        <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">
+        <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">
           Pilih Tema Kuis
         </h2>
-        <p className="text-slate-500 text-sm md:text-base font-medium mt-1.5">
+        <p className="text-slate-500 text-xs md:text-sm font-medium mt-2">
           Tentukan bidang keilmuan pada tiap sisi layar, lalu mulai pertandingan bersama.
         </p>
       </div>
 
-      {/* Main Container - max-w-[1450px] agar kartu sangat besar & lebar tapi tidak nempel tepi desktop */}
-      <div className="relative flex-1 flex w-full max-w-[1450px] gap-8 md:gap-12 items-start justify-center mx-auto min-h-0">
+      {/* Main Container Kartu */}
+      <div className="relative w-full max-w-[1500px] mx-auto">
         {/* Pembatas Vertikal Tengah */}
-        <div className="hidden md:block absolute left-1/2 top-4 bottom-4 w-[1px] bg-slate-200 -translate-x-1/2 z-10" />
+        <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-[1px] bg-slate-200 -translate-x-1/2 z-10" />
 
-        {/* Pemain 1 */}
-        <DuelColumn
-          label="Pemain 1"
-          state={stateA}
-          categories={categories}
-          allQuestions={allQuestions}
-          onChooseCategory={onChooseCategoryA}
-        />
+        {/* Grid Dua Kolom Pemain */}
+        <div className="flex w-full gap-6 md:gap-12 items-start justify-center">
+          {/* Pemain 1 */}
+          <DuelColumn
+            label="Pemain 1"
+            state={stateA}
+            categories={categories}
+            allQuestions={allQuestions}
+            onChooseCategory={onChooseCategoryA}
+          />
 
-        {/* Pemain 2 */}
-        <DuelColumn
-          label="Pemain 2"
-          state={stateB}
-          categories={categories}
-          allQuestions={allQuestions}
-          onChooseCategory={onChooseCategoryB}
-        />
+          {/* Pemain 2 */}
+          <DuelColumn
+            label="Pemain 2"
+            state={stateB}
+            categories={categories}
+            allQuestions={allQuestions}
+            onChooseCategory={onChooseCategoryB}
+          />
+        </div>
 
-        {/* Badge VS Tengah */}
-        <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-gradient-to-b from-blue-600 to-indigo-600 shadow-xl shadow-indigo-500/30 items-center justify-center z-30 border-4 border-slate-50 pointer-events-none">
+        {/* PERBAIKAN 3: Badge VS dikunci persis di tengah-tengah jajaran kartu kuis */}
+        <div className="hidden md:flex absolute left-1/2 top-[58%] -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-gradient-to-b from-blue-600 to-indigo-600 shadow-2xl shadow-indigo-500/40 items-center justify-center z-30 border-4 border-slate-50 pointer-events-none">
           <span className="text-white text-lg font-black italic tracking-wider">
             VS
           </span>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function CategoryCard({
+  cat,
+  count,
+  isSelected,
+  onSelect,
+}: {
+  cat: string;
+  count: number;
+  isSelected: boolean;
+  onSelect: () => void;
+}) {
+  const m = CATEGORY_META[cat];
+
+  return (
+    <div
+      onClick={onSelect}
+      className={`cursor-pointer bg-white rounded-3xl p-5 md:p-6 flex items-center gap-4 md:gap-5 border transition-all duration-200 shadow-xs ${
+        isSelected
+          ? 'border-indigo-600 ring-4 ring-indigo-600/20 bg-indigo-50/30 shadow-lg'
+          : 'border-slate-200/90 hover:border-indigo-300 hover:shadow-md'
+      }`}
+    >
+      {/* Icon Box */}
+      <div
+        className={`w-16 h-16 md:w-18 md:h-18 rounded-2xl flex items-center justify-center shrink-0 transition-colors duration-200 ${
+          isSelected
+            ? 'bg-indigo-600 text-white shadow-md'
+            : 'bg-indigo-50/80 border border-indigo-100 text-indigo-600'
+        }`}
+      >
+        {m?.icon ? (
+          <div className="scale-125">{m.icon}</div>
+        ) : (
+          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        )}
+      </div>
+
+      {/* Detail Teks Tema */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 mb-1 flex-wrap">
+          <h4 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight whitespace-normal">
+            {cat}
+          </h4>
+          <span className="text-[11px] md:text-xs font-bold text-slate-600 bg-slate-100 border border-slate-200/80 px-2.5 py-0.5 rounded-lg shrink-0">
+              {Math.min(count, QUIZ_SIZE)} Soal
+          </span>
+        </div>
+        <p className="text-xs md:text-sm text-slate-500 font-medium leading-relaxed line-clamp-2">
+          {m?.description}
+        </p>
+      </div>
+
+      {/* Tombol Aksi */}
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onSelect();
+        }}
+        className={`flex items-center justify-center gap-2 px-5 py-3 rounded-2xl font-extrabold text-xs md:text-sm transition-all duration-200 shrink-0 shadow-xs ${
+          isSelected ? 'bg-indigo-600 text-white' : 'bg-slate-900 hover:bg-indigo-600 text-white'
+        }`}
+      >
+        <span>{isSelected ? 'Terkunci ✓' : 'Pilih Topik'}</span>
+        {!isSelected && (
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        )}
+      </button>
+    </div>
+  );
+}
+
+function SoloCategorySelect({
+  state,
+  categories,
+  allQuestions,
+  onChooseCategory,
+}: {
+  state: QuizState;
+  categories: string[];
+  allQuestions: QuestionData[];
+  onChooseCategory: (category: string) => void;
+}) {
+  const selectedCategory = state.context.category;
+
+  return (
+    <div className="min-h-screen w-full flex flex-col justify-center py-12 px-6 md:px-10 bg-slate-50 relative">
+      {/* Header Judul */}
+      <div className="text-center z-10 shrink-0 mb-8 md:mb-10">
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <span className="w-8 h-[1.5px] bg-slate-400/80" />
+          <p className="text-xs font-bold tracking-[0.25em] text-slate-500 uppercase">
+            EVALUASI MANDIRI &amp; WAWASAN
+          </p>
+          <span className="w-8 h-[1.5px] bg-slate-400/80" />
+        </div>
+        <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">
+          Pilih Tema Kuis
+        </h2>
+        <p className="text-slate-500 text-xs md:text-sm font-medium mt-2">
+          Tentukan bidang keilmuan yang ingin kamu uji, lalu kuis langsung dimulai.
+        </p>
+      </div>
+
+      {/* List Kartu Menu Tema */}
+      <div className="w-full max-w-[760px] mx-auto flex flex-col gap-4 px-1 py-1">
+        {categories.map((cat) => (
+          <CategoryCard
+            key={cat}
+            cat={cat}
+            count={allQuestions.filter((q) => q.category === cat).length}
+            isSelected={selectedCategory === cat}
+            onSelect={() => onChooseCategory(cat)}
+          />
+        ))}
       </div>
     </div>
   );
@@ -646,21 +784,21 @@ function DuelColumn({
   const selectedCategory = state.context.category;
 
   return (
-    <div className="flex-1 flex flex-col gap-4 w-full h-full justify-start">
+    <div className="flex-1 flex flex-col gap-3 w-full justify-start min-w-0">
       {/* Header Status Pemain */}
-      <div className="flex flex-col items-center shrink-0 mb-1">
-        <div className="inline-flex items-center gap-2.5 px-8 py-2.5 rounded-full bg-white border border-slate-200/90 shadow-xs mb-2">
-          <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center text-white">
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+      <div className="flex flex-col items-center shrink-0 mb-2">
+        <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white border border-slate-200/90 shadow-xs mb-1.5">
+          <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-white">
+            <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
             </svg>
           </div>
-          <h3 className="text-2xl font-bold text-slate-900 tracking-tight">{label}</h3>
+          <h3 className="text-xl font-bold text-slate-900 tracking-tight">{label}</h3>
         </div>
 
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50/90 border border-indigo-100 text-indigo-700 text-xs font-bold">
+        <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-indigo-50/90 border border-indigo-100 text-indigo-700 text-xs font-bold">
           <span
-            className={`w-2.5 h-2.5 rounded-full transition-colors duration-300 ${
+            className={`w-2 h-2 rounded-full transition-colors duration-300 ${
               hasSelected ? 'bg-emerald-500' : 'bg-indigo-500'
             }`}
           />
@@ -670,8 +808,8 @@ function DuelColumn({
         </div>
       </div>
 
-      {/* List Kartu Menu Tema RAKSASA */}
-      <div className="flex flex-col gap-5 px-1 py-1 overflow-y-auto max-h-[calc(100vh-280px)]">
+      {/* List Kartu Menu Tema */}
+      <div className="flex flex-col gap-4 px-1 py-1">
         {categories.map((cat) => {
           const m = CATEGORY_META[cat];
           const count = allQuestions.filter((q) => q.category === cat).length;
@@ -681,24 +819,24 @@ function DuelColumn({
             <div
               key={cat}
               onClick={() => onChooseCategory(cat)}
-              className={`cursor-pointer bg-white rounded-3xl p-7 md:p-8 flex items-center gap-7 border transition-all duration-200 shadow-xs ${
+              className={`cursor-pointer bg-white rounded-3xl p-5 md:p-6 flex items-center gap-4 md:gap-5 border transition-all duration-200 shadow-xs ${
                 isSelected
                   ? 'border-indigo-600 ring-4 ring-indigo-600/20 bg-indigo-50/30 shadow-lg'
                   : 'border-slate-200/90 hover:border-indigo-300 hover:shadow-md'
               }`}
             >
-              {/* Icon Box Super Besar (24 x 24) */}
+              {/* Icon Box */}
               <div
-                className={`w-20 h-20 md:w-24 md:h-24 rounded-2xl flex items-center justify-center shrink-0 transition-colors duration-200 ${
+                className={`w-16 h-16 md:w-18 md:h-18 rounded-2xl flex items-center justify-center shrink-0 transition-colors duration-200 ${
                   isSelected
                     ? 'bg-indigo-600 text-white shadow-md'
                     : 'bg-indigo-50/80 border border-indigo-100 text-indigo-600'
                 }`}
               >
                 {m?.icon ? (
-                  <div className="scale-150">{m.icon}</div>
+                  <div className="scale-125">{m.icon}</div>
                 ) : (
-                  <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -709,17 +847,17 @@ function DuelColumn({
                 )}
               </div>
 
-              {/* Detail Teks Tema Extra Jumbo */}
+              {/* Detail Teks Tema */}
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-3 mb-2">
-                  <h4 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight truncate">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <h4 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight whitespace-normal">
                     {cat}
                   </h4>
-                  <span className="text-xs md:text-sm font-bold text-slate-600 bg-slate-100 border border-slate-200/80 px-3 py-1 rounded-lg shrink-0">
+                  <span className="text-[11px] md:text-xs font-bold text-slate-600 bg-slate-100 border border-slate-200/80 px-2.5 py-0.5 rounded-lg shrink-0">
                     {count} Soal
                   </span>
                 </div>
-                <p className="text-xs md:text-base text-slate-500 font-medium leading-relaxed line-clamp-2">
+                <p className="text-xs md:text-sm text-slate-500 font-medium leading-relaxed line-clamp-2">
                   {m?.description}
                 </p>
               </div>
@@ -731,7 +869,7 @@ function DuelColumn({
                   e.stopPropagation();
                   onChooseCategory(cat);
                 }}
-                className={`flex items-center justify-center gap-2 px-7 py-4 rounded-2xl font-extrabold text-sm md:text-base transition-all duration-200 shrink-0 shadow-xs ${
+                className={`flex items-center justify-center gap-2 px-5 py-3 rounded-2xl font-extrabold text-xs md:text-sm transition-all duration-200 shrink-0 shadow-xs ${
                   isSelected
                     ? 'bg-indigo-600 text-white'
                     : 'bg-slate-900 hover:bg-indigo-600 text-white'
@@ -739,7 +877,7 @@ function DuelColumn({
               >
                 <span>{isSelected ? 'Terkunci ✓' : 'Pilih Topik'}</span>
                 {!isSelected && (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"

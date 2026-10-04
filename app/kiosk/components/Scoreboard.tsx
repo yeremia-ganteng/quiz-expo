@@ -495,16 +495,16 @@ export function SoloScoreboard({ data, onBack }: { data: ScoreData; onBack: () =
    DUEL SCOREBOARD (MULTIPLAYER)
    ========================================================================== */
 
-function PlayerCard({
+function PlayerColumn({
   label,
   data,
-  accuracy,
+  stats,
   highlighted,
   delay,
 }: {
   label: string;
   data: ScoreData;
-  accuracy: number;
+  stats: ReturnType<typeof computeStats>;
   highlighted: boolean;
   delay: number;
 }) {
@@ -512,28 +512,56 @@ function PlayerCard({
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.6 }}
-      className={`flex-1 bg-white/95 backdrop-blur-xl border rounded-3xl p-7 flex flex-col items-center relative overflow-hidden ${
-        highlighted ? 'border-indigo-500 ring-2 ring-indigo-500/20 shadow-md' : 'border-slate-200/90 shadow-xs'
-      }`}
+      transition={{ delay, duration: 0.5 }}
+      className="flex flex-col gap-5 min-w-0"
     >
-      {highlighted && (
-        <span className="bg-indigo-600 text-white text-[10px] font-black px-3.5 py-1 rounded-full uppercase tracking-wider mb-3">
+      {/* Ringkasan Skor */}
+      <div
+        className={`bg-white/95 backdrop-blur-xl border rounded-3xl p-7 flex flex-col items-center text-center relative overflow-hidden ${
+          highlighted ? 'border-indigo-500 ring-2 ring-indigo-500/20 shadow-md' : 'border-slate-200/90 shadow-xs'
+        }`}
+      >
+        <span
+          aria-hidden={!highlighted}
+          className={`text-[10px] font-black px-3.5 py-1 rounded-full uppercase tracking-wider mb-3 ${
+            highlighted ? 'bg-indigo-600 text-white' : 'invisible'
+          }`}
+        >
           Pemenang
         </span>
-      )}
-      <p className="text-2xl font-black text-slate-900 tracking-tight">{label}</p>
-      <p className="text-xs text-slate-400 font-bold mb-5">{data.category}</p>
-      <ScoreRing score={data.score} total={data.total} size={170} />
-      <div className="flex items-center gap-1.5 bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100/80 px-3.5 py-1 rounded-xl mt-5 mb-1.5">
-        <AwardBadgeIcon className="w-4 h-4 text-indigo-600 shrink-0" />
-        <span className="text-[10px] font-black uppercase tracking-wider text-indigo-900">Predikat</span>
+        <p className="text-2xl font-black text-slate-900 tracking-tight">{label}</p>
+        <p className="text-xs text-slate-400 font-bold mb-5">{data.category}</p>
+
+        <ScoreRing score={data.score} total={data.total} size={190} />
+
+        <div className="flex items-center gap-2 bg-gradient-to-r from-indigo-50/80 to-purple-50/80 border border-indigo-100 px-4 py-1.5 rounded-2xl mt-5 mb-1.5">
+          <AwardBadgeIcon className="w-4 h-4 text-indigo-600 shrink-0" />
+          <span className="text-[11px] font-black uppercase tracking-wider text-indigo-950">Predikat</span>
+        </div>
+        <h2 className="text-2xl font-black text-slate-900 tracking-tight">{getPredicate(stats.accuracy)}</h2>
       </div>
-      <p className="text-lg font-black text-slate-900">{getPredicate(accuracy)}</p>
+
+      {/* Grid 4 Kartu Statistik */}
+      <div className="grid grid-cols-2 gap-3.5">
+        <StatTile type="accuracy" label="KETEPATAN" value={stats.accuracy} unit="%" delay={delay + 0.2} />
+        <StatTile type="average" label="RATA-RATA" value={formatSeconds(stats.avgMs)} unit="dtk" delay={delay + 0.3} />
+        <StatTile type="fastest" label="TERCEPAT" value={formatSeconds(stats.fastestMs)} unit="dtk" delay={delay + 0.4} />
+        <StatTile type="totalTime" label="TOTAL WAKTU" value={formatSeconds(stats.totalMs)} unit="dtk" delay={delay + 0.5} />
+      </div>
+
+      {/* Rincian Jawaban */}
+      <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-3xl p-7 shadow-xs flex flex-col">
+        <div className="flex items-center justify-between mb-4 px-1">
+          <h3 className="text-xs font-black uppercase tracking-wider text-slate-400">Rincian Jawaban</h3>
+          <span className="text-xs font-bold text-slate-400">{data.history.length} Soal</span>
+        </div>
+        <div className="max-h-[620px] overflow-y-auto pr-1">
+          <ReviewList history={data.history} compact />
+        </div>
+      </div>
     </motion.div>
   );
 }
-
 function CompareRow({
   label,
   a,
@@ -611,30 +639,35 @@ export function DuelScoreboard({ result, onBack }: { result: DuelData; onBack: (
   }
 
   return (
-    <div className="min-h-screen bg-slate-50/70 py-10 px-6 md:px-10 relative overflow-hidden">
+    <div className="min-h-screen w-full flex items-center justify-center p-6 md:p-10 relative overflow-hidden bg-slate-50/70">
+      {/* Calm & Professional Background Ambient */}
       <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[850px] bg-gradient-to-tr from-indigo-100/40 via-slate-100/30 to-blue-100/40 blur-[140px] rounded-full pointer-events-none" />
 
-      <div className="max-w-[1380px] mx-auto relative z-10">
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
-          <p className="text-xs font-black tracking-widest text-slate-400 uppercase mb-1.5">Pertandingan Selesai</p>
-          <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-3.5">Papan Skor Duel</h2>
-          <span className="inline-block text-xs font-black text-white bg-slate-900 px-6 py-2 rounded-full shadow-xs uppercase tracking-wider">
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-[1380px] relative z-10 my-auto"
+      >
+        {/* Header Utama */}
+        <div className="text-center mb-8 md:mb-10">
+          <p className="text-xs font-extrabold tracking-widest text-slate-400 uppercase mb-1.5">Pertandingan Selesai</p>
+          <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-3.5">Papan Skor Duel</h1>
+          <span className="inline-flex items-center gap-2.5 px-4.5 py-1.5 rounded-full bg-white border border-slate-200/90 shadow-2xs text-xs font-extrabold text-indigo-600">
+            <span className="w-2 h-2 rounded-full bg-indigo-500" />
             {verdict}
           </span>
           {note && <p className="text-xs text-slate-500 font-bold mt-2.5">{note}</p>}
-        </motion.div>
-
-        <div className="flex items-stretch gap-6 mb-8">
-          <PlayerCard label="Pemain 1" data={result.a} accuracy={sa.accuracy} highlighted={winner === 'a'} delay={0.1} />
-          <div className="flex items-center">
-            <div className="w-13 h-13 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex items-center justify-center">
-              <span className="text-xs font-black italic tracking-widest text-slate-400">VS</span>
-            </div>
-          </div>
-          <PlayerCard label="Pemain 2" data={result.b} accuracy={sb.accuracy} highlighted={winner === 'b'} delay={0.2} />
         </div>
 
-        <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-3xl p-8 mb-8 shadow-xs">
+        {/* Dua Kolom Pemain */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start mb-8">
+          <PlayerColumn label="Pemain 1" data={result.a} stats={sa} highlighted={winner === 'a'} delay={0.1} />
+          <PlayerColumn label="Pemain 2" data={result.b} stats={sb} highlighted={winner === 'b'} delay={0.2} />
+        </div>
+
+        {/* Perbandingan Langsung */}
+        {/* <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-3xl p-8 mb-8 shadow-xs">
           <p className="text-center text-xs font-black tracking-widest text-slate-400 uppercase mb-6">
             Perbandingan Langsung
           </p>
@@ -644,30 +677,18 @@ export function DuelScoreboard({ result, onBack }: { result: DuelData; onBack: (
             <CompareRow label="Rata-rata Jawab" a={sa.avgMs} b={sb.avgMs} aText={`${formatSeconds(sa.avgMs)} dtk`} bText={`${formatSeconds(sb.avgMs)} dtk`} higherIsBetter={false} delay={0.7} />
             <CompareRow label="Jawaban Tercepat" a={sa.fastestMs} b={sb.fastestMs} aText={`${formatSeconds(sa.fastestMs)} dtk`} bText={`${formatSeconds(sb.fastestMs)} dtk`} higherIsBetter={false} delay={0.8} />
           </div>
-        </div>
+        </div> */}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-3xl p-7 shadow-xs">
-            <p className="text-xs font-black text-slate-700 mb-4 uppercase tracking-wider">Rincian Pemain 1</p>
-            <ReviewList history={result.a.history} compact />
-          </div>
-          <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-3xl p-7 shadow-xs">
-            <p className="text-xs font-black text-slate-700 mb-4 uppercase tracking-wider">Rincian Pemain 2</p>
-            <ReviewList history={result.b.history} compact />
-          </div>
-        </div>
-
-        <div className="flex justify-center mt-10">
-          <motion.button
-            whileTap={{ scale: 0.98 }}
-            onClick={onBack}
-            className="px-8 py-4 bg-slate-900 hover:bg-slate-800 text-white font-bold text-base rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center gap-2.5 cursor-pointer"
-          >
-            <BackHomeIcon className="w-5 h-5 text-white/80" />
-            <span>Kembali ke Menu Utama</span>
-          </motion.button>
-        </div>
-      </div>
+        {/* Tombol Kembali */}
+        <motion.button
+          whileTap={{ scale: 0.98 }}
+          onClick={onBack}
+          className="w-full flex items-center justify-center gap-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-base py-4 rounded-2xl shadow-sm hover:shadow-md transition-all cursor-pointer"
+        >
+          <BackHomeIcon className="w-5 h-5 text-white/80" />
+          <span>Kembali ke Menu Utama</span>
+        </motion.button>
+      </motion.div>
     </div>
   );
 }
