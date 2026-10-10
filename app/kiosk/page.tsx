@@ -56,6 +56,10 @@ type QuizState = StateFrom<typeof quizMachine>;
 type UiPhase = 'landing' | 'modeSelect' | 'playing';
 type Mode = 'single' | 'multiplayer' | null;
 
+/* ==========================================================================
+   HELPER PENGACAKAN SOAL (FISHER-YATES SHUFFLE MURNI)
+   ========================================================================== */
+
 function shuffleArray<T>(arr: T[]): T[] {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -66,9 +70,20 @@ function shuffleArray<T>(arr: T[]): T[] {
 }
 
 function buildQuizSet(all: QuestionData[], category: string): QuestionData[] {
+  // 1. Filter soal berdasarkan kategori
   const filtered = all.filter((q) => q.category === category);
-  const picked = shuffleArray(filtered).slice(0, QUIZ_SIZE);
-  return picked.map((q) => ({ ...q, options: shuffleArray(q.options) }));
+  
+  // 2. Acak urutan seluruh soal dalam kategori (misal dari 30 soal)
+  const shuffledQuestions = shuffleArray(filtered);
+  
+  // 3. Ambil 10 soal acak pertama
+  const picked = shuffledQuestions.slice(0, QUIZ_SIZE);
+  
+  // 4. Acak juga urutan pilihan jawaban (A, B, C, D) di setiap soal
+  return picked.map((q) => ({
+    ...q,
+    options: shuffleArray([...q.options]),
+  }));
 }
 
 export default function KioskPage() {
@@ -247,6 +262,7 @@ export default function KioskPage() {
   };
 
   const handleChooseCategory = (send: typeof sendA, category: string, autoStart = false) => {
+    // Generate ulang set kuis acak setiap kali topik dipilih
     const quizSet = buildQuizSet(allQuestions, category);
     send({ type: 'CHOOSE_CATEGORY', category, questions: quizSet });
     if (autoStart) send({ type: 'GO' });
@@ -286,7 +302,6 @@ export default function KioskPage() {
   };
 
   return (
-    /* PERBAIKAN 1: Mengubah h-screen overflow-hidden menjadi min-h-screen overflow-y-auto agar halaman bisa di-scroll */
     <div className="min-h-screen w-full flex flex-col bg-slate-50 relative overflow-y-auto select-none">
       <AnimatePresence>
         {!isConnected && (
@@ -486,7 +501,7 @@ export default function KioskPage() {
             }}
             onBack={resetToLanding}
           />
-                 ) : stateA.matches('categorySelect') ? (
+        ) : stateA.matches('categorySelect') ? (
           <SoloCategorySelect
             state={stateA}
             categories={categories}
@@ -587,9 +602,7 @@ function DuelCategorySelect({
   onChooseCategoryB: (category: string) => void;
 }) {
   return (
-    /* PERBAIKAN 2: Container menggunakan min-h-screen & py-12 agar layout fleksibel dan bisa di-scroll jika layar pendek */
     <div className="min-h-screen w-full flex flex-col justify-center py-12 px-6 md:px-10 bg-slate-50 relative">
-      {/* Header Judul */}
       <div className="text-center z-10 shrink-0 mb-8 md:mb-10">
         <div className="flex items-center justify-center gap-2 mb-2">
           <span className="w-8 h-[1.5px] bg-slate-400/80" />
@@ -606,14 +619,10 @@ function DuelCategorySelect({
         </p>
       </div>
 
-      {/* Main Container Kartu */}
       <div className="relative w-full max-w-[1500px] mx-auto">
-        {/* Pembatas Vertikal Tengah */}
         <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-[1px] bg-slate-200 -translate-x-1/2 z-10" />
 
-        {/* Grid Dua Kolom Pemain */}
         <div className="flex w-full gap-6 md:gap-12 items-start justify-center">
-          {/* Pemain 1 */}
           <DuelColumn
             label="Pemain 1"
             state={stateA}
@@ -622,7 +631,6 @@ function DuelCategorySelect({
             onChooseCategory={onChooseCategoryA}
           />
 
-          {/* Pemain 2 */}
           <DuelColumn
             label="Pemain 2"
             state={stateB}
@@ -632,7 +640,6 @@ function DuelCategorySelect({
           />
         </div>
 
-        {/* PERBAIKAN 3: Badge VS dikunci persis di tengah-tengah jajaran kartu kuis */}
         <div className="hidden md:flex absolute left-1/2 top-[58%] -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-gradient-to-b from-blue-600 to-indigo-600 shadow-2xl shadow-indigo-500/40 items-center justify-center z-30 border-4 border-slate-50 pointer-events-none">
           <span className="text-white text-lg font-black italic tracking-wider">
             VS
@@ -665,7 +672,6 @@ function CategoryCard({
           : 'border-slate-200/90 hover:border-indigo-300 hover:shadow-md'
       }`}
     >
-      {/* Icon Box */}
       <div
         className={`w-16 h-16 md:w-18 md:h-18 rounded-2xl flex items-center justify-center shrink-0 transition-colors duration-200 ${
           isSelected
@@ -682,14 +688,13 @@ function CategoryCard({
         )}
       </div>
 
-      {/* Detail Teks Tema */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1 flex-wrap">
           <h4 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight whitespace-normal">
             {cat}
           </h4>
           <span className="text-[11px] md:text-xs font-bold text-slate-600 bg-slate-100 border border-slate-200/80 px-2.5 py-0.5 rounded-lg shrink-0">
-              {Math.min(count, QUIZ_SIZE)} Soal
+            {Math.min(count, QUIZ_SIZE)} Soal
           </span>
         </div>
         <p className="text-xs md:text-sm text-slate-500 font-medium leading-relaxed line-clamp-2">
@@ -697,7 +702,6 @@ function CategoryCard({
         </p>
       </div>
 
-      {/* Tombol Aksi */}
       <button
         type="button"
         onClick={(e) => {
@@ -734,7 +738,6 @@ function SoloCategorySelect({
 
   return (
     <div className="min-h-screen w-full flex flex-col justify-center py-12 px-6 md:px-10 bg-slate-50 relative">
-      {/* Header Judul */}
       <div className="text-center z-10 shrink-0 mb-8 md:mb-10">
         <div className="flex items-center justify-center gap-2 mb-2">
           <span className="w-8 h-[1.5px] bg-slate-400/80" />
@@ -751,7 +754,6 @@ function SoloCategorySelect({
         </p>
       </div>
 
-      {/* List Kartu Menu Tema */}
       <div className="w-full max-w-[760px] mx-auto flex flex-col gap-4 px-1 py-1">
         {categories.map((cat) => (
           <CategoryCard
@@ -785,7 +787,6 @@ function DuelColumn({
 
   return (
     <div className="flex-1 flex flex-col gap-3 w-full justify-start min-w-0">
-      {/* Header Status Pemain */}
       <div className="flex flex-col items-center shrink-0 mb-2">
         <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white border border-slate-200/90 shadow-xs mb-1.5">
           <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-white">
@@ -808,88 +809,16 @@ function DuelColumn({
         </div>
       </div>
 
-      {/* List Kartu Menu Tema */}
       <div className="flex flex-col gap-4 px-1 py-1">
-        {categories.map((cat) => {
-          const m = CATEGORY_META[cat];
-          const count = allQuestions.filter((q) => q.category === cat).length;
-          const isSelected = selectedCategory === cat;
-
-          return (
-            <div
-              key={cat}
-              onClick={() => onChooseCategory(cat)}
-              className={`cursor-pointer bg-white rounded-3xl p-5 md:p-6 flex items-center gap-4 md:gap-5 border transition-all duration-200 shadow-xs ${
-                isSelected
-                  ? 'border-indigo-600 ring-4 ring-indigo-600/20 bg-indigo-50/30 shadow-lg'
-                  : 'border-slate-200/90 hover:border-indigo-300 hover:shadow-md'
-              }`}
-            >
-              {/* Icon Box */}
-              <div
-                className={`w-16 h-16 md:w-18 md:h-18 rounded-2xl flex items-center justify-center shrink-0 transition-colors duration-200 ${
-                  isSelected
-                    ? 'bg-indigo-600 text-white shadow-md'
-                    : 'bg-indigo-50/80 border border-indigo-100 text-indigo-600'
-                }`}
-              >
-                {m?.icon ? (
-                  <div className="scale-125">{m.icon}</div>
-                ) : (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M13 10V3L4 14h7v7l9-11h-7z"
-                    />
-                  </svg>
-                )}
-              </div>
-
-              {/* Detail Teks Tema */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <h4 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight whitespace-normal">
-                    {cat}
-                  </h4>
-                  <span className="text-[11px] md:text-xs font-bold text-slate-600 bg-slate-100 border border-slate-200/80 px-2.5 py-0.5 rounded-lg shrink-0">
-                    {count} Soal
-                  </span>
-                </div>
-                <p className="text-xs md:text-sm text-slate-500 font-medium leading-relaxed line-clamp-2">
-                  {m?.description}
-                </p>
-              </div>
-
-              {/* Tombol Aksi */}
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onChooseCategory(cat);
-                }}
-                className={`flex items-center justify-center gap-2 px-5 py-3 rounded-2xl font-extrabold text-xs md:text-sm transition-all duration-200 shrink-0 shadow-xs ${
-                  isSelected
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-slate-900 hover:bg-indigo-600 text-white'
-                }`}
-              >
-                <span>{isSelected ? 'Terkunci ✓' : 'Pilih Topik'}</span>
-                {!isSelected && (
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2.5"
-                      d="M14 5l7 7m0 0l-7 7m7-7H3"
-                    />
-                  </svg>
-                )}
-              </button>
-            </div>
-          );
-        })}
+        {categories.map((cat) => (
+          <CategoryCard
+            key={cat}
+            cat={cat}
+            count={allQuestions.filter((q) => q.category === cat).length}
+            isSelected={selectedCategory === cat}
+            onSelect={() => onChooseCategory(cat)}
+          />
+        ))}
       </div>
     </div>
   );
@@ -955,7 +884,7 @@ function QuizPanel({
                       <p className={`font-extrabold text-slate-900 ${isFull ? 'text-2xl md:text-3xl' : 'text-sm'}`}>{cat}</p>
                       {isFull && (
                         <span className="px-3 py-1 bg-slate-100 text-slate-600 text-sm md:text-base font-semibold rounded-lg">
-                          {count} Soal
+                          {Math.min(count, QUIZ_SIZE)} Soal
                         </span>
                       )}
                     </div>
@@ -988,30 +917,32 @@ function QuizPanel({
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
-          className={isFull ? 'w-full max-w-2xl' : 'w-full max-w-xl'}
+          className={isFull ? 'w-full max-w-4xl' : 'w-full max-w-xl'}
         >
           <div className="flex items-center justify-between gap-3 mb-6">
-            <span className={`font-bold ${meta?.color} ${meta?.iconBg} border border-slate-200 rounded-full ${isFull ? 'text-xs px-3.5 py-1.5' : 'text-sm px-4 py-2'}`}>
+            <span className={`font-bold ${meta?.color} ${meta?.iconBg} border border-slate-200 rounded-full ${isFull ? 'text-sm px-5 py-2' : 'text-sm px-4 py-2'}`}>
               {activeCategory}
             </span>
-            <span className={`text-slate-400 font-semibold ${isFull ? 'text-xs' : 'text-sm'}`}>
+            <span className={`text-slate-400 font-semibold ${isFull ? 'text-base' : 'text-sm'}`}>
               {state.context.currentIndex + 1} / {state.context.questions.length}
             </span>
           </div>
-          <div className={`bg-white border border-slate-200 rounded-2xl shadow-sm ${isFull ? 'p-8' : 'p-10'}`}>
-            <h2 className={`font-bold text-slate-900 leading-snug ${isFull ? 'text-2xl mb-8' : 'text-3xl mb-10'}`}>
+          <div className={`bg-white border border-slate-200 rounded-2xl shadow-sm ${isFull ? 'p-12' : 'p-10'}`}>
+            <h2 className={`font-bold text-slate-900 leading-snug ${isFull ? 'text-4xl mb-10' : 'text-3xl mb-10'}`}>
               {currentQuestion.text}
             </h2>
-            <div className={`flex flex-col ${isFull ? 'gap-3' : 'gap-4'}`}>
+            <div className="flex flex-col gap-4">
               {currentQuestion.options.map((opt, i) => (
                 <motion.button
                   key={opt}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => onAnswer(opt)}
-                  className={`group flex items-center gap-4 bg-slate-50 border-2 border-transparent rounded-xl text-left font-medium text-slate-700 hover:bg-white transition-all hover:${meta?.ring} px-6 py-5 text-lg`}
+                  className={`group flex items-center gap-5 bg-slate-50 border-2 border-transparent rounded-xl text-left font-medium text-slate-700 hover:bg-white transition-all hover:${meta?.ring} ${
+                    isFull ? 'px-8 py-6 text-2xl' : 'px-6 py-5 text-lg'
+                  }`}
                 >
                   <span className={`shrink-0 rounded-full border-2 border-slate-300 group-hover:${meta?.ring} flex items-center justify-center font-bold text-slate-500 ${
-                    isFull ? 'w-9 h-9 text-sm' : 'w-10 h-10 text-base'
+                    isFull ? 'w-12 h-12 text-lg' : 'w-10 h-10 text-base'
                   }`}>
                     {OPTION_LABELS[i]}
                   </span>
@@ -1032,26 +963,30 @@ function QuizPanel({
 
         return (
           <div className="relative w-full">
-            <div className="w-full max-w-2xl mx-auto opacity-30 pointer-events-none transition-opacity duration-300">
+            <div className={`w-full mx-auto opacity-30 pointer-events-none transition-opacity duration-300 ${isFull ? 'max-w-4xl' : 'max-w-2xl'}`}>
               <div className="flex items-center justify-between gap-3 mb-6">
-                <span className={`font-bold ${meta?.color} ${meta?.iconBg} border border-slate-200 rounded-full ${isFull ? 'text-xs px-3.5 py-1.5' : 'text-sm px-4 py-2'}`}>
+                <span className={`font-bold ${meta?.color} ${meta?.iconBg} border border-slate-200 rounded-full ${isFull ? 'text-sm px-5 py-2' : 'text-sm px-4 py-2'}`}>
                   {activeCategory}
                 </span>
-                <span className={`text-slate-400 font-semibold ${isFull ? 'text-xs' : 'text-sm'}`}>
+                <span className={`text-slate-400 font-semibold ${isFull ? 'text-base' : 'text-sm'}`}>
                   {state.context.currentIndex + 1} / {state.context.questions.length}
                 </span>
               </div>
-              <div className={`bg-white border border-slate-200 rounded-2xl shadow-sm ${isFull ? 'p-8' : 'p-10'}`}>
-                <h2 className={`font-bold text-slate-900 leading-snug ${isFull ? 'text-2xl mb-8' : 'text-3xl mb-10'}`}>
+              <div className={`bg-white border border-slate-200 rounded-2xl shadow-sm ${isFull ? 'p-12' : 'p-10'}`}>
+                <h2 className={`font-bold text-slate-900 leading-snug ${isFull ? 'text-4xl mb-10' : 'text-3xl mb-10'}`}>
                   {currentQuestion.text}
                 </h2>
-                <div className={`flex flex-col ${isFull ? 'gap-3' : 'gap-4'}`}>
+                <div className="flex flex-col gap-4">
                   {currentQuestion.options.map((opt, i) => (
                     <div
                       key={opt}
-                      className="flex items-center gap-4 bg-slate-50 border-2 border-transparent rounded-xl px-6 py-5 text-lg font-medium text-slate-700"
+                      className={`flex items-center gap-5 bg-slate-50 border-2 border-transparent rounded-xl font-medium text-slate-700 ${
+                        isFull ? 'px-8 py-6 text-2xl' : 'px-6 py-5 text-lg'
+                      }`}
                     >
-                      <span className="w-9 h-9 rounded-full border-2 border-slate-300 flex items-center justify-center font-bold text-slate-500 text-sm">
+                      <span className={`shrink-0 rounded-full border-2 border-slate-300 flex items-center justify-center font-bold text-slate-500 ${
+                        isFull ? 'w-12 h-12 text-lg' : 'w-10 h-10 text-base'
+                      }`}>
                         {OPTION_LABELS[i]}
                       </span>
                       {opt}
@@ -1069,8 +1004,8 @@ function QuizPanel({
               transition={{ duration: 0.2, ease: 'easeOut' }}
               className={
                 isFull
-                  ? "fixed inset-0 z-50 flex items-center justify-center bg-slate-900/30 backdrop-blur-md backdrop-saturate-150 p-6 will-change-transform"
-                  : "absolute inset-0 z-50 flex items-center justify-center bg-slate-900/30 backdrop-blur-md backdrop-saturate-150 p-4 rounded-3xl will-change-transform"
+                  ? 'fixed inset-0 z-50 flex items-center justify-center bg-slate-900/30 backdrop-blur-md backdrop-saturate-150 p-6 will-change-transform'
+                  : 'absolute inset-0 z-50 flex items-center justify-center bg-slate-900/30 backdrop-blur-md backdrop-saturate-150 p-4 rounded-3xl will-change-transform'
               }
             >
               <motion.div

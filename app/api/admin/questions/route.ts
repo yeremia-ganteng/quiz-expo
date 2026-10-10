@@ -17,6 +17,7 @@ export async function POST(req: Request) {
       options: JSON.stringify(body.options),
       correctOption: body.correctOption,
       order: body.order,
+      isActive: typeof body.isActive === 'boolean' ? body.isActive : true,
     },
   });
   return NextResponse.json(question);

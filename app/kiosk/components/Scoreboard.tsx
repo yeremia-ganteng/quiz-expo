@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { motion, animate } from 'framer-motion';
+import { motion, animate, AnimatePresence } from 'framer-motion';
 import type { AnswerRecord } from '@/machines/quizMachine';
 
 export type ScoreData = {
@@ -251,28 +251,24 @@ export function StatTile({ label, value, unit, type, delay = 0 }: StatTileProps)
   const config = {
     accuracy: {
       emblem: <KetepatanEmblem />,
-      badge: <TargetBadge />,
       unitColor: 'text-emerald-600',
       glowColor: 'bg-emerald-500/10',
       borderColor: 'border-slate-200/90 hover:border-emerald-300',
     },
     average: {
       emblem: <RataRataEmblem />,
-      badge: <ClockBadge />,
       unitColor: 'text-blue-600',
       glowColor: 'bg-blue-500/10',
       borderColor: 'border-slate-200/90 hover:border-blue-300',
     },
     fastest: {
       emblem: <TercepatEmblem />,
-      badge: <LightningBadge />,
       unitColor: 'text-amber-500',
       glowColor: 'bg-amber-500/10',
       borderColor: 'border-slate-200/90 hover:border-amber-300',
     },
     totalTime: {
       emblem: <TotalWaktuEmblem />,
-      badge: <PurpleClockBadge />,
       unitColor: 'text-indigo-600',
       glowColor: 'bg-indigo-500/10',
       borderColor: 'border-slate-200/90 hover:border-indigo-300',
@@ -303,8 +299,6 @@ export function StatTile({ label, value, unit, type, delay = 0 }: StatTileProps)
           </span>
         </div>
       </div>
-
-      <div className="absolute top-4 right-4 z-10">{config.badge}</div>
     </motion.div>
   );
 }
@@ -317,6 +311,134 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
   return chunks;
 }
 
+function ReviewItem({ h, globalIndex }: { h: AnswerRecord; globalIndex: number }) {
+  const [open, setOpen] = useState(false);
+  const correctAnswer = h.correctOption ?? (h.isCorrect ? h.selectedOption : null);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 12 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: 0.2 + globalIndex * 0.03, duration: 0.3, ease: 'easeOut' }}
+      className={`p-4 rounded-2xl border transition-all flex flex-col justify-between ${
+        h.isCorrect
+          ? 'bg-emerald-50/30 border-emerald-200/80 hover:border-emerald-300'
+          : 'bg-rose-50/30 border-rose-200/80 hover:border-rose-300'
+      }`}
+    >
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <span
+            className={`w-7 h-7 rounded-full text-xs font-black flex items-center justify-center shrink-0 shadow-xs ${
+              h.isCorrect ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white'
+            }`}
+          >
+            {globalIndex + 1}
+          </span>
+          <span
+            className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-md border ${
+              h.isCorrect
+                ? 'bg-emerald-100/70 border-emerald-200 text-emerald-800'
+                : 'bg-rose-100/70 border-rose-200 text-rose-800'
+            }`}
+          >
+            {h.isCorrect ? <CheckIcon /> : <CrossIcon />}
+            {h.isCorrect ? 'Tepat' : 'Keliru'}
+          </span>
+        </div>
+
+        <p
+          className={`text-xs md:text-sm font-semibold text-slate-800 mb-2 leading-snug ${
+            open ? '' : 'line-clamp-2'
+          }`}
+        >
+          {h.text}
+        </p>
+      </div>
+
+      <div className="pt-2.5 border-t border-slate-200/60 flex items-center justify-between text-[11px] md:text-xs">
+        <span className="text-slate-500 truncate max-w-[180px]">
+          Dipilih:{' '}
+          <strong className={h.isCorrect ? 'text-emerald-700 font-bold' : 'text-rose-700 font-bold'}>
+            {h.selectedOption ?? 'Tidak dijawab'}
+          </strong>
+          {!h.isCorrect && h.correctOption && (
+            <span className="text-emerald-700 ml-1 font-semibold">
+              (Benar: {h.correctOption})
+            </span>
+          )}
+        </span>
+        <div className="flex items-center gap-2 shrink-0 ml-1">
+          <span className="text-slate-400 font-semibold">{formatSeconds(h.responseTimeMs)} dtk</span>
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-label={open ? 'Tutup detail jawaban' : 'Lihat detail jawaban'}
+            className={`w-7 h-7 rounded-full border flex items-center justify-center transition-colors cursor-pointer ${
+              open
+                ? 'bg-slate-900 border-slate-900 text-white'
+                : 'bg-white border-slate-200 text-slate-500 hover:border-slate-400 hover:text-slate-800'
+            }`}
+          >
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="5" cy="12" r="1.8" />
+              <circle cx="12" cy="12" r="1.8" />
+              <circle cx="19" cy="12" r="1.8" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="overflow-hidden"
+          >
+            <div className="mt-3 flex flex-col gap-2">
+              <div
+                className={`rounded-xl border p-3 ${
+                  h.isCorrect ? 'bg-emerald-50 border-emerald-200' : 'bg-rose-50 border-rose-200'
+                }`}
+              >
+                <p className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-1">
+                  Jawaban yang dipilih
+                </p>
+                <p
+                  className={`text-xs md:text-sm font-semibold leading-snug ${
+                    h.isCorrect ? 'text-emerald-800' : 'text-rose-800'
+                  }`}
+                >
+                  {h.selectedOption ?? 'Tidak dijawab'}
+                </p>
+              </div>
+
+              {!h.isCorrect && correctAnswer && (
+                <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3">
+                  <p className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-1">
+                    Jawaban yang benar
+                  </p>
+                  <p className="text-xs md:text-sm font-semibold leading-snug text-emerald-800">
+                    {correctAnswer}
+                  </p>
+                </div>
+              )}
+
+              <p className="text-[11px] text-slate-400 font-semibold">
+                Waktu menjawab: {formatSeconds(h.responseTimeMs)} dtk
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
 function ReviewList({ history, compact = false }: { history: AnswerRecord[]; compact?: boolean }) {
   const columns = chunkArray(history, 5);
 
@@ -326,62 +448,7 @@ function ReviewList({ history, compact = false }: { history: AnswerRecord[]; com
         <div key={colIndex} className="flex flex-col justify-between min-w-0 h-full gap-3.5">
           {column.map((h, i) => {
             const globalIndex = colIndex * 5 + i;
-            return (
-              <motion.div
-                key={`${h.questionId}-${globalIndex}`}
-                initial={{ opacity: 0, x: 12 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 + globalIndex * 0.03, duration: 0.3, ease: 'easeOut' }}
-                className={`p-4 rounded-2xl border transition-all flex flex-col justify-between ${
-                  h.isCorrect
-                    ? 'bg-emerald-50/30 border-emerald-200/80 hover:border-emerald-300'
-                    : 'bg-rose-50/30 border-rose-200/80 hover:border-rose-300'
-                }`}
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span
-                      className={`w-7 h-7 rounded-full text-xs font-black flex items-center justify-center shrink-0 shadow-xs ${
-                        h.isCorrect ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white'
-                      }`}
-                    >
-                      {globalIndex + 1}
-                    </span>
-                    <span
-                      className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-md border ${
-                        h.isCorrect
-                          ? 'bg-emerald-100/70 border-emerald-200 text-emerald-800'
-                          : 'bg-rose-100/70 border-rose-200 text-rose-800'
-                      }`}
-                    >
-                      {h.isCorrect ? <CheckIcon /> : <CrossIcon />}
-                      {h.isCorrect ? 'Tepat' : 'Keliru'}
-                    </span>
-                  </div>
-
-                  <p className="text-xs md:text-sm font-semibold text-slate-800 line-clamp-2 mb-2 leading-snug">
-                    {h.text}
-                  </p>
-                </div>
-
-                <div className="pt-2.5 border-t border-slate-200/60 flex items-center justify-between text-[11px] md:text-xs">
-                  <span className="text-slate-500 truncate max-w-[180px]">
-                    Dipilih:{' '}
-                    <strong className={h.isCorrect ? 'text-emerald-700 font-bold' : 'text-rose-700 font-bold'}>
-                      {h.selectedOption ?? 'Tidak dijawab'}
-                    </strong>
-                    {!h.isCorrect && h.correctOption && (
-                      <span className="text-emerald-700 ml-1 font-semibold">
-                        (Benar: {h.correctOption})
-                      </span>
-                    )}
-                  </span>
-                  <span className="text-slate-400 font-semibold shrink-0 ml-1">
-                    {formatSeconds(h.responseTimeMs)} dtk
-                  </span>
-                </div>
-              </motion.div>
-            );
+            return <ReviewItem key={`${h.questionId}-${globalIndex}`} h={h} globalIndex={globalIndex} />;
           })}
         </div>
       ))}

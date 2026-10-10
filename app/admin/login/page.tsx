@@ -9,37 +9,50 @@ export default function AdminLoginPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError(false);
 
-    const res = await fetch('/api/admin/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password }),
-    });
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
 
-    setLoading(false);
+      const data = await res.json();
 
-    if (res.ok) {
-      router.push('/admin');
-      router.refresh();
-    } else {
+      if (res.ok && data.success) {
+        // Gunakan router Next.js agar bersih dari warning linter window.location
+        router.push('/admin');
+        router.refresh();
+      } else {
+        setError(true);
+      }
+    } catch {
       setError(true);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 p-8">
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 p-8 select-none">
       <form
         onSubmit={handleSubmit}
         className="bg-white border border-gray-200 rounded-2xl p-8 w-full max-w-sm shadow-sm"
       >
-        <p className="text-xs font-bold tracking-widest text-gray-400 uppercase mb-1">Akses Terbatas</p>
-        <h1 className="text-xl font-bold text-slate-900 mb-6">Masuk ke Panel Admin</h1>
+        <p className="text-xs font-bold tracking-widest text-gray-400 uppercase mb-1">
+          Akses Terbatas
+        </p>
+        <h1 className="text-xl font-bold text-slate-900 mb-6">
+          Masuk ke Panel Admin
+        </h1>
 
-        <label className="block text-xs font-semibold text-gray-500 mb-1.5">Password</label>
+        <label className="block text-xs font-semibold text-gray-500 mb-1.5">
+          Password
+        </label>
         <input
           type="password"
           value={password}
@@ -49,13 +62,17 @@ export default function AdminLoginPage() {
         />
 
         {error && (
-          <p className="text-xs text-red-600 font-medium mb-4">Password salah, coba lagi.</p>
+          <p className="text-xs text-red-600 font-medium mb-4">
+            Password salah, coba lagi.
+          </p>
         )}
 
         <button
           type="submit"
           disabled={loading}
-          className={`w-full bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold py-2.5 rounded-lg transition disabled:opacity-50 ${error ? 'mt-2' : 'mt-4'}`}
+          className={`w-full bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold py-2.5 rounded-lg transition disabled:opacity-50 ${
+            error ? 'mt-2' : 'mt-4'
+          }`}
         >
           {loading ? 'Memeriksa...' : 'Masuk'}
         </button>

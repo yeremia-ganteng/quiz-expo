@@ -17,6 +17,7 @@ export async function PUT(
       options: JSON.stringify(body.options),
       correctOption: body.correctOption,
       order: body.order,
+      ...(typeof body.isActive === 'boolean' && { isActive: body.isActive }),
     },
   });
   return NextResponse.json(question);

@@ -15,6 +15,7 @@ model Question {
   correctOption String
   order         Int
   responses     Response[]
+  isActive Boolean @default(true)
 }
 
 model Participant {

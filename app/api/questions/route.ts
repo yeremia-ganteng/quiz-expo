@@ -5,6 +5,7 @@ const prisma = new PrismaClient();
 
 export async function GET() {
   const questions = await prisma.question.findMany({
+    where: { isActive: true },
     orderBy: { order: 'asc' },
     select: {
       id: true,
